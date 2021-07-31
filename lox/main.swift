@@ -7,5 +7,5 @@
 
 import Foundation
 
-print("Hello, World!")
-
+let lox = Lox()
+lox.run()
