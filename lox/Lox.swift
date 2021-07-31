@@ -65,6 +65,11 @@ class Lox: ErrorReporting {
     }
     
     private func run(_ text: String) {
+        let scanner = Scanner(source: text, errorReporter: self)
+        let tokens = scanner.scanTokens()
+        for token in tokens {
+            console.print("\(token)")
+        }
     }
     
     func error(line: Int, message: String) {
