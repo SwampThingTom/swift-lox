@@ -51,6 +51,7 @@
 		E25CFCF926B41E9A0053DD08 = {
 			isa = PBXGroup;
 			children = (
+				E25CFD5A26B5A0950053DD08 /* lox-cli */,
 				E25CFD0426B41E9A0053DD08 /* lox */,
 				E25CFD0326B41E9A0053DD08 /* Products */,
 			);
@@ -67,7 +68,6 @@
 		E25CFD0426B41E9A0053DD08 /* lox */ = {
 			isa = PBXGroup;
 			children = (
-				E25CFD0526B41E9A0053DD08 /* main.swift */,
 				E25CFD0C26B420BD0053DD08 /* Lox.swift */,
 				E25CFD0E26B4221E0053DD08 /* Console.swift */,
 				E25CFD1026B4D8AD0053DD08 /* TokenType.swift */,
@@ -75,6 +75,14 @@
 				E25CFD1426B4DBE40053DD08 /* Scanner.swift */,
 			);
 			path = lox;
+			sourceTree = "<group>";
+		};
+		E25CFD5A26B5A0950053DD08 /* lox-cli */ = {
+			isa = PBXGroup;
+			children = (
+				E25CFD0526B41E9A0053DD08 /* main.swift */,
+			);
+			path = "lox-cli";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

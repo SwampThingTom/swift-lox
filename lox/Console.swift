@@ -9,8 +9,6 @@ import Foundation
 
 class Console {
     
-    static let shared = Console()
-    
     func print(_ message: String, terminator: String = "\n") {
         Swift.print(message, terminator: terminator)
     }

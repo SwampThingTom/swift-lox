@@ -16,26 +16,14 @@ class Lox: ErrorReporting {
     
     private static let quitCommand = "quit"
     
-    private let console = Console.shared
+    private let console: Console
     var hadError = false
     
-    private var executableName: String {
-        (CommandLine.arguments[0] as NSString).lastPathComponent
+    init(console: Console) {
+        self.console = console
     }
     
-    func run() {
-        guard CommandLine.argc <= 2 else {
-            printUsage()
-            exit(EXIT_FAILURE)
-        }
-        if CommandLine.argc == 2 {
-            runScript(CommandLine.arguments[1])
-        } else {
-            runPrompt()
-        }
-    }
-    
-    private func runScript(_ script: String) {
+    func runScript(_ script: String) {
         do {
             let contents = try String(contentsOfFile: script)
             run(contents)
@@ -48,8 +36,8 @@ class Lox: ErrorReporting {
         }
     }
     
-    private func runPrompt() {
-        console.print("Running \(executableName) in interactive mode.")
+    func runPrompt() {
+        console.print("Running Lox in interactive mode.")
         console.print("Type \"\(Lox.quitCommand)\" to exit.")
         while true {
             guard let line = console.readLine() else {
@@ -79,9 +67,5 @@ class Lox: ErrorReporting {
     private func report(line: Int, component: String, message: String) {
         console.printError("[line \(line)] Error\(component): \(message)")
         hadError = true
-    }
-    
-    private func printUsage() {
-        console.print("Usage: \(executableName) [script]")
     }
 }
