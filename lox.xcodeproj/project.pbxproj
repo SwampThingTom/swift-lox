@@ -97,6 +97,7 @@
 		E25CFD0426B41E9A0053DD08 /* lox */ = {
 			isa = PBXGroup;
 			children = (
+				E25CFD7126B5D4D90053DD08 /* ast */,
 				E25CFD0C26B420BD0053DD08 /* Lox.swift */,
 				E25CFD5B26B5A3E40053DD08 /* LoxIO.swift */,
 				E25CFD1026B4D8AD0053DD08 /* TokenType.swift */,
@@ -123,6 +124,14 @@
 				E25CFD6D26B5B2D30053DD08 /* PrintWriter.swift */,
 			);
 			path = generate_ast;
+			sourceTree = "<group>";
+		};
+		E25CFD7126B5D4D90053DD08 /* ast */ = {
+			isa = PBXGroup;
+			children = (
+				E25CFD7226B5D4D90053DD08 /* Expr.swift */,
+			);
+			path = ast;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,6 +216,7 @@
 				E25CFD5C26B5A3E40053DD08 /* LoxIO.swift in Sources */,
 				E25CFD1326B4DA780053DD08 /* Token.swift in Sources */,
 				E25CFD1126B4D8AD0053DD08 /* TokenType.swift in Sources */,
+				E25CFD7326B5D4D90053DD08 /* Expr.swift in Sources */,
 				E25CFD0F26B4221E0053DD08 /* ConsoleIO.swift in Sources */,
 				E25CFD1526B4DBE40053DD08 /* Scanner.swift in Sources */,
 				E25CFD0D26B420BD0053DD08 /* Lox.swift in Sources */,
