@@ -7,15 +7,15 @@
 
 import Foundation
 
-let console = Console()
-let executableName = (CommandLine.arguments[0] as NSString).lastPathComponent
+let console = ConsoleIO()
 
 guard CommandLine.argc <= 2 else {
-    console.printError("Usage: \(executableName) [script]")
+    let executableName = (CommandLine.arguments[0] as NSString).lastPathComponent
+    console.printErrorLine("Usage: \(executableName) [script]")
     exit(EXIT_FAILURE)
 }
 
-let lox = Lox(console: console)
+let lox = Lox(io: console)
 if CommandLine.argc == 2 {
     lox.runScript(CommandLine.arguments[1])
 } else {

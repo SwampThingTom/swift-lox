@@ -16,11 +16,11 @@ class Lox: ErrorReporting {
     
     private static let quitCommand = "quit"
     
-    private let console: Console
+    private let io: LoxIO
     var hadError = false
     
-    init(console: Console) {
-        self.console = console
+    init(io: LoxIO) {
+        self.io = io
     }
     
     func runScript(_ script: String) {
@@ -31,17 +31,17 @@ class Lox: ErrorReporting {
                 exit(EXIT_FAILURE)
             }
         } catch {
-            console.printError("Unable to read file \"\(script)\": \(error.localizedDescription)")
+            io.printErrorLine("Unable to read file \"\(script)\": \(error.localizedDescription)")
             exit(EXIT_FAILURE)
         }
     }
     
     func runPrompt() {
-        console.print("Running Lox in interactive mode.")
-        console.print("Type \"\(Lox.quitCommand)\" to exit.")
+        io.printLine("Running Lox in interactive mode.")
+        io.printLine("Type \"\(Lox.quitCommand)\" to exit.")
         while true {
-            guard let line = console.readLine() else {
-                console.printError("Unable to read input.")
+            guard let line = io.readLine() else {
+                io.printErrorLine("Unable to read input.")
                 exit(EXIT_FAILURE)
             }
             guard line.lowercased() != Lox.quitCommand else {
@@ -56,7 +56,7 @@ class Lox: ErrorReporting {
         let scanner = Scanner(source: text, errorReporter: self)
         let tokens = scanner.scanTokens()
         for token in tokens {
-            console.print("\(token)")
+            console.printLine("\(token)")
         }
     }
     
@@ -65,7 +65,7 @@ class Lox: ErrorReporting {
     }
     
     private func report(line: Int, component: String, message: String) {
-        console.printError("[line \(line)] Error\(component): \(message)")
+        io.printErrorLine("[line \(line)] Error\(component): \(message)")
         hadError = true
     }
 }

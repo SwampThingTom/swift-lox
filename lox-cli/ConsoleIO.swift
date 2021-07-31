@@ -7,15 +7,15 @@
 
 import Foundation
 
-class Console {
+class ConsoleIO: LoxIO {
     
-    func print(_ message: String, terminator: String = "\n") {
-        Swift.print(message, terminator: terminator)
+    func printLine(_ message: String) {
+        Swift.print(message)
     }
     
-    func printError(_ message: String, terminator: String = "\n") {
+    func printErrorLine(_ message: String) {
         var stderr = FileHandle.standardError
-        Swift.print("\(message)", terminator: terminator, to: &stderr)
+        Swift.print("\(message)", to: &stderr)
     }
     
     func readLine() -> String? {
