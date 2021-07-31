@@ -7,11 +7,17 @@
 
 import Foundation
 
-class Lox {
+protocol ErrorReporting {
+    var hadError: Bool { get }
+    func error(line: Int, message: String)
+}
+
+class Lox: ErrorReporting {
     
     private static let quitCommand = "quit"
     
     private let console = Console.shared
+    var hadError = false
     
     private var executableName: String {
         (CommandLine.arguments[0] as NSString).lastPathComponent
@@ -33,6 +39,9 @@ class Lox {
         do {
             let contents = try String(contentsOfFile: script)
             run(contents)
+            if hadError {
+                exit(EXIT_FAILURE)
+            }
         } catch {
             console.printError("Unable to read file \"\(script)\": \(error.localizedDescription)")
             exit(EXIT_FAILURE)
@@ -51,10 +60,20 @@ class Lox {
                 break
             }
             run(line)
+            hadError = false
         }
     }
     
     private func run(_ text: String) {
+    }
+    
+    func error(line: Int, message: String) {
+        report(line: line, component: "", message: message)
+    }
+    
+    private func report(line: Int, component: String, message: String) {
+        console.printError("[line \(line)] Error\(component): \(message)")
+        hadError = true
     }
     
     private func printUsage() {
