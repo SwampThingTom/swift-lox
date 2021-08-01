@@ -119,7 +119,7 @@ class Scanner {
     }
     
     private func addToken(_ tokenType: TokenType, literal: Any? = nil) {
-        let text = String(source[start...current])
+        let text = String(source[start ..< current])
         let token = Token(tokenType: tokenType,
                           lexeme: text,
                           literal: literal,
@@ -157,7 +157,7 @@ class Scanner {
                 advance()
             }
         }
-        let value = Double(source[start...current])
+        let value = Double(source[start ..< current])
         addToken(.number, literal: value)
     }
     
@@ -165,7 +165,7 @@ class Scanner {
         while peek().isAlphaNumeric {
             advance()
         }
-        let text = String(source[start...current])
+        let text = String(source[start ..< current])
         let tokenType = Scanner.keywords[text] ?? .identifier
         addToken(tokenType)
     }
