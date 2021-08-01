@@ -11,6 +11,7 @@ protocol ErrorReporting {
     var hadError: Bool { get }
     func error(line: Int, message: String)
     func error(at token: Token, message: String)
+    func error(runtimeError: RuntimeError)
 }
 
 class Lox: ErrorReporting {
@@ -77,6 +78,16 @@ class Lox: ErrorReporting {
     
     private func reportParserError(at line: Int, lexeme: String, message: String) {
         io.printErrorLine("[line \(line)] Error\(lexeme): \(message)")
+        hadError = true
+    }
+
+    func error(runtimeError: RuntimeError) {
+        switch runtimeError {
+        case .typeMismatch(let token, let message):
+            io.printErrorLine("\(message)\n[line \(token.line)]")
+        case .unexpected(let message):
+            io.printErrorLine(message)
+        }
         hadError = true
     }
 }
