@@ -65,7 +65,7 @@ class ASTGenerator {
             let typeName = type.split(separator: ":")[0].trimmingCharacters(in: .whitespaces)
             let funcName = "visit\(typeName)\(baseName)"
             let arguments = "_ \(baseName.lowercased()): \(baseName).\(typeName)"
-            writer.printLine("    func \(funcName)(\(arguments)) -> ReturnType")
+            writer.printLine("    func \(funcName)(\(arguments)) throws -> ReturnType")
         }
         
         writer.printLine("}")
@@ -96,7 +96,7 @@ class ASTGenerator {
         // Define accept visitor.
         writer.printLine()
         writer.printLine("        override \(acceptVisitorFunc(for: baseName)) {")
-        writer.printLine("            return visitor.visit\(className)\(baseName)(self)")
+        writer.printLine("            return try visitor.visit\(className)\(baseName)(self)")
         writer.printLine("        }")
         
         writer.printLine("    }")
@@ -117,6 +117,6 @@ class ASTGenerator {
     }
     
     private func acceptVisitorFunc(for baseName: String) -> String {
-        "func accept<V: \(baseName)Visitor, R>(visitor: V) -> R where R == V.ReturnType"
+        "func accept<V: \(baseName)Visitor, R>(visitor: V) throws -> R where R == V.ReturnType"
     }
 }
