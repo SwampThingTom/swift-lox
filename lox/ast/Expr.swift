@@ -2,6 +2,7 @@
 
 protocol ExprVisitor {
     associatedtype ExprVisitorReturnType
+    func visitAssignExpr(_ expr: Expr.Assign) throws -> ExprVisitorReturnType
     func visitBinaryExpr(_ expr: Expr.Binary) throws -> ExprVisitorReturnType
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> ExprVisitorReturnType
     func visitLiteralExpr(_ expr: Expr.Literal) throws -> ExprVisitorReturnType
@@ -12,6 +13,20 @@ protocol ExprVisitor {
 class Expr {
     func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturnType {
         fatalError()
+    }
+
+    class Assign: Expr {
+        let name: Token
+        let value: Expr?
+
+        init(name: Token, value: Expr?) {
+            self.name = name
+            self.value = value
+        }
+
+        override func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturnType {
+            return try visitor.visitAssignExpr(self)
+        }
     }
 
     class Binary: Expr {
