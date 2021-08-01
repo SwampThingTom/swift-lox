@@ -212,6 +212,10 @@ extension Interpreter: StmtVisitor {
         _ = try evaluate(stmt.expression)
     }
     
+    func visitIfStmt(_ stmt: Stmt.If) throws -> Void {
+        // TODO: implement
+    }
+    
     func visitPrintStmt(_ stmt: Stmt.Print) throws -> Void {
         let value = try evaluate(stmt.expression)
         io.printLine(stringify(value))
