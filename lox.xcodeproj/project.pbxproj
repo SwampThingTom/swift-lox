@@ -20,6 +20,7 @@
 		E25CFD7326B5D4D90053DD08 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CFD7226B5D4D90053DD08 /* Expr.swift */; };
 		E25CFD7526B5EB1F0053DD08 /* ASTPrinter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CFD7426B5EB1F0053DD08 /* ASTPrinter.swift */; };
 		E25CFD7726B60F5E0053DD08 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CFD7626B60F5E0053DD08 /* Parser.swift */; };
+		E25CFD7926B6429B0053DD08 /* Interpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CFD7826B6429B0053DD08 /* Interpreter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,6 +60,7 @@
 		E25CFD7226B5D4D90053DD08 /* Expr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Expr.swift; sourceTree = "<group>"; };
 		E25CFD7426B5EB1F0053DD08 /* ASTPrinter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTPrinter.swift; sourceTree = "<group>"; };
 		E25CFD7626B60F5E0053DD08 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		E25CFD7826B6429B0053DD08 /* Interpreter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interpreter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				E25CFD1426B4DBE40053DD08 /* Scanner.swift */,
 				E25CFD1226B4DA780053DD08 /* Token.swift */,
 				E25CFD1026B4D8AD0053DD08 /* TokenType.swift */,
+				E25CFD7826B6429B0053DD08 /* Interpreter.swift */,
 			);
 			path = lox;
 			sourceTree = "<group>";
@@ -223,6 +226,7 @@
 				E25CFD7726B60F5E0053DD08 /* Parser.swift in Sources */,
 				E25CFD7526B5EB1F0053DD08 /* ASTPrinter.swift in Sources */,
 				E25CFD1326B4DA780053DD08 /* Token.swift in Sources */,
+				E25CFD7926B6429B0053DD08 /* Interpreter.swift in Sources */,
 				E25CFD1126B4D8AD0053DD08 /* TokenType.swift in Sources */,
 				E25CFD7326B5D4D90053DD08 /* Expr.swift in Sources */,
 				E25CFD0F26B4221E0053DD08 /* ConsoleIO.swift in Sources */,
