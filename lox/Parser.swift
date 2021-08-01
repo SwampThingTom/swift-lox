@@ -64,6 +64,9 @@ class Parser {
     }
     
     private func statement() throws -> Stmt {
+        if match(tokenType: .keywordIf) {
+            return try ifStatement()
+        }
         if match(tokenType: .keywordPrint) {
             return try printStatement()
         }
@@ -71,6 +74,17 @@ class Parser {
             return Stmt.Block(statements: try block())
         }
         return try expressionStatement()
+    }
+    
+    private func ifStatement() throws -> Stmt {
+        try consume(tokenType: .leftParen, errorIfMissing: "Expect '(' after 'if'.")
+        let condition = try expression()
+        try consume(tokenType: .rightParen, errorIfMissing: "Expect ')' after if condition.")
+        
+        let thenBranch = try statement()
+        let elseBranch = match(tokenType: .keywordElse) ? try statement() : nil
+        
+        return Stmt.If(condition: condition, thenBranch: thenBranch, elseBranch: elseBranch)
     }
     
     private func printStatement() throws -> Stmt {

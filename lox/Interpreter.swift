@@ -213,7 +213,11 @@ extension Interpreter: StmtVisitor {
     }
     
     func visitIfStmt(_ stmt: Stmt.If) throws -> Void {
-        // TODO: implement
+        if isTruthy(try evaluate(stmt.condition)) {
+            try execute(stmt.thenBranch)
+        } else if let elseBranch = stmt.elseBranch {
+            try execute(elseBranch)
+        }
     }
     
     func visitPrintStmt(_ stmt: Stmt.Print) throws -> Void {
