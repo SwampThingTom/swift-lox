@@ -34,6 +34,10 @@ class ASTPrinter: ExprVisitor {
         try parenthesize(name: expr.oper.lexeme, expressions: expr.right)
     }
     
+    func visitVariableExpr(_ expr: Expr.Variable) throws -> String {
+        expr.name.lexeme
+    }
+
     private func parenthesize(name: String, expressions: Expr...) throws -> String {
         let operands = try expressions
             .map() { try $0.accept(visitor: self) }

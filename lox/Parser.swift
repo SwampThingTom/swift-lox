@@ -35,16 +35,32 @@ class Parser {
     }
     
     func parse() -> [Stmt] {
-        do {
-            var statements = [Stmt]()
-            while !isAtEnd {
-                statements.append(try statement())
+        var statements = [Stmt]()
+        while !isAtEnd {
+            if let declaration = declaration() {
+                statements.append(declaration)
             }
-            return statements
-        } catch {
-            // TODO:
-            return []
         }
+        return statements
+    }
+    
+    private func declaration() -> Stmt? {
+        do {
+            if match(tokenType: .keywordVar) {
+                return try varDeclaration()
+            }
+            return try statement()
+        } catch {
+            synchronize()
+            return nil
+        }
+    }
+    
+    private func varDeclaration() throws -> Stmt {
+        let name = try consume(tokenType: .identifier, errorIfMissing: "Expect variable name.")
+        let initializer = match(tokenType: .equal) ? try expression() : nil
+        try consume(tokenType: .semicolon, errorIfMissing: "Expect ';' after variable declaration.")
+        return Stmt.Var(name: name, initializer: initializer)
     }
     
     private func statement() throws -> Stmt {
@@ -107,6 +123,9 @@ class Parser {
         }
         if match(any: [.number, .string]) {
             return Expr.Literal(value: previous.literal)
+        }
+        if match(tokenType: .identifier) {
+            return Expr.Variable(name: previous)
         }
         if match(tokenType: .leftParen) {
             let expr = try expression()

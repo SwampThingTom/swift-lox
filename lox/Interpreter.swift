@@ -9,13 +9,16 @@ import Foundation
 
 enum RuntimeError: Error {
     case typeMismatch(Token, String)
+    case undefinedVariable(Token, String)
     case unexpected(String)
 }
 
 class Interpreter {
     
-    let io: LoxIO
     var errorReporter: ErrorReporting!
+    
+    private let io: LoxIO
+    private var environment = Environment()
     
     init(io: LoxIO) {
         self.io = io
@@ -138,6 +141,10 @@ extension Interpreter: ExprVisitor {
         return nil
     }
     
+    func visitVariableExpr(_ expr: Expr.Variable) throws -> Any? {
+        try environment.get(token: expr.name)
+    }
+    
     private func numericOperand(for oper: Token, operand: Any?) throws -> Double {
         guard let operand = operand as? Double else {
             throw RuntimeError.typeMismatch(oper, "Operand must be a number.")
@@ -183,5 +190,13 @@ extension Interpreter: StmtVisitor {
     func visitPrintStmt(_ stmt: Stmt.Print) throws -> Void {
         let value = try evaluate(stmt.expression)
         io.printLine(stringify(value))
+    }
+    
+    func visitVarStmt(_ stmt: Stmt.Var) throws -> Void {
+        var value: Any? = nil
+        if let initializer = stmt.initializer {
+            value = try evaluate(initializer)
+        }
+        environment.define(token: stmt.name, value: value)
     }
 }

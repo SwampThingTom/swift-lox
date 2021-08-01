@@ -88,7 +88,8 @@ class Lox: ErrorReporting {
 
     func error(runtimeError: RuntimeError) {
         switch runtimeError {
-        case .typeMismatch(let token, let message):
+        case .typeMismatch(let token, let message): fallthrough
+        case .undefinedVariable(let token, let message):
             io.printErrorLine("\(message)\n[line \(token.line)]")
         case .unexpected(let message):
             io.printErrorLine(message)
