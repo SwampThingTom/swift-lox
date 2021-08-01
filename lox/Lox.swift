@@ -65,18 +65,18 @@ class Lox: ErrorReporting {
     
     func error(at token: Token, message: String) {
         if token.tokenType == .eof {
-            report(line: token.line, component: " at end", message: message)
+            reportParserError(at: token.line, lexeme: " at end", message: message)
         } else {
-            report(line: token.line, component: " at \(token.lexeme)", message: message)
+            reportParserError(at: token.line, lexeme: " at \(token.lexeme)", message: message)
         }
     }
 
     func error(line: Int, message: String) {
-        report(line: line, component: "", message: message)
+        reportParserError(at: line, lexeme: "", message: message)
     }
     
-    private func report(line: Int, component: String, message: String) {
-        io.printErrorLine("[line \(line)] Error\(component): \(message)")
+    private func reportParserError(at line: Int, lexeme: String, message: String) {
+        io.printErrorLine("[line \(line)] Error\(lexeme): \(message)")
         hadError = true
     }
 }
