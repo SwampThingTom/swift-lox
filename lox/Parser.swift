@@ -67,6 +67,9 @@ class Parser {
         if match(tokenType: .keywordPrint) {
             return try printStatement()
         }
+        if match(tokenType: .leftBrace) {
+            return Stmt.Block(statements: try block())
+        }
         return try expressionStatement()
     }
     
@@ -80,6 +83,19 @@ class Parser {
         let value = try expression()
         try consume(tokenType: .semicolon, errorIfMissing: "Expect ; after expression.")
         return Stmt.Expression(expression: value)
+    }
+    
+    private func block() throws -> [Stmt] {
+        var statements = [Stmt]()
+        
+        while !check(tokenType: .rightBrace) && !isAtEnd {
+            if let declaration = declaration() {
+                statements.append(declaration)
+            }
+        }
+        
+        try consume(tokenType: .rightBrace, errorIfMissing: "Expect '}' after block.")
+        return statements
     }
     
     private func assignment() throws -> Expr {

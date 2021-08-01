@@ -9,7 +9,12 @@ import Foundation
 
 class Environment {
     
+    private let enclosing: Environment?
     private var values = Dictionary<String, Any?>()
+    
+    init(enclosing: Environment? = nil) {
+        self.enclosing = enclosing
+    }
     
     func define(token: Token, value: Any?) {
         values[token.lexeme] = value
@@ -17,14 +22,21 @@ class Environment {
     
     func assign(token: Token, value: Any?) throws {
         guard values.index(forKey: token.lexeme) != nil else {
-            throw RuntimeError.undefinedVariable(token, "Undefined variable '\(token.lexeme)'.")
+            guard let enclosing = enclosing else {
+                throw RuntimeError.undefinedVariable(token, "Undefined variable '\(token.lexeme)'.")
+            }
+            try enclosing.assign(token: token, value: value)
+            return
         }
         values[token.lexeme] = value
     }
     
     func get(token: Token) throws -> Any? {
         guard let index = values.index(forKey: token.lexeme) else {
-            throw RuntimeError.undefinedVariable(token, "Undefined variable '\(token.lexeme)'.")
+            guard let enclosing = enclosing else {
+                throw RuntimeError.undefinedVariable(token, "Undefined variable '\(token.lexeme)'.")
+            }
+            return try enclosing.get(token: token)
         }
         return values[index].value
     }

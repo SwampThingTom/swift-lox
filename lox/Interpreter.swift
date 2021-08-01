@@ -41,6 +41,18 @@ class Interpreter {
         try stmt.accept(visitor: self)
     }
     
+    private func execute(block: [Stmt], environment: Environment) throws {
+        let previousEnvironment = self.environment
+        self.environment = environment
+        defer {
+            self.environment = previousEnvironment
+        }
+        
+        for statement in block {
+            try execute(statement)
+        }
+    }
+    
     private func evaluate(_ expr: Expr) throws -> Any? {
         try expr.accept(visitor: self)
     }
@@ -193,7 +205,7 @@ extension Interpreter: ExprVisitor {
 extension Interpreter: StmtVisitor {
     
     func visitBlockStmt(_ stmt: Stmt.Block) throws -> Void {
-        // TODO: implement
+        try execute(block: stmt.statements, environment: Environment(enclosing: environment))
     }
     
     func visitExpressionStmt(_ stmt: Stmt.Expression) throws -> Void {
