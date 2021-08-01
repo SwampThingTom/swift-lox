@@ -15,6 +15,13 @@ class Environment {
         values[token.lexeme] = value
     }
     
+    func assign(token: Token, value: Any?) throws {
+        guard values.index(forKey: token.lexeme) != nil else {
+            throw RuntimeError.undefinedVariable(token, "Undefined variable '\(token.lexeme)'.")
+        }
+        values[token.lexeme] = value
+    }
+    
     func get(token: Token) throws -> Any? {
         guard let index = values.index(forKey: token.lexeme) else {
             throw RuntimeError.undefinedVariable(token, "Undefined variable '\(token.lexeme)'.")

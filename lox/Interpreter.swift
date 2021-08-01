@@ -145,6 +145,15 @@ extension Interpreter: ExprVisitor {
         try environment.get(token: expr.name)
     }
     
+    func visitAssignExpr(_ expr: Expr.Assign) throws -> Any? {
+        var value: Any? = nil
+        if let exprValue = expr.value {
+            value = try evaluate(exprValue)
+        }
+        try environment.assign(token: expr.name, value: value)
+        return value
+    }
+    
     private func numericOperand(for oper: Token, operand: Any?) throws -> Double {
         guard let operand = operand as? Double else {
             throw RuntimeError.typeMismatch(oper, "Operand must be a number.")
