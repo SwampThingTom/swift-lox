@@ -4,6 +4,7 @@ protocol StmtVisitor {
     associatedtype StmtVisitorReturnType
     func visitExpressionStmt(_ stmt: Stmt.Expression) throws -> StmtVisitorReturnType
     func visitPrintStmt(_ stmt: Stmt.Print) throws -> StmtVisitorReturnType
+    func visitVarStmt(_ stmt: Stmt.Var) throws -> StmtVisitorReturnType
 }
 
 class Stmt {
@@ -32,6 +33,20 @@ class Stmt {
 
         override func accept<V: StmtVisitor, R>(visitor: V) throws -> R where R == V.StmtVisitorReturnType {
             return try visitor.visitPrintStmt(self)
+        }
+    }
+
+    class Var: Stmt {
+        let name: Token
+        let initializer: Expr?
+
+        init(name: Token, initializer: Expr?) {
+            self.name = name
+            self.initializer = initializer
+        }
+
+        override func accept<V: StmtVisitor, R>(visitor: V) throws -> R where R == V.StmtVisitorReturnType {
+            return try visitor.visitVarStmt(self)
         }
     }
 }

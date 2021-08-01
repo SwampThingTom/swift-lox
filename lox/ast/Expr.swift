@@ -6,6 +6,7 @@ protocol ExprVisitor {
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> ExprVisitorReturnType
     func visitLiteralExpr(_ expr: Expr.Literal) throws -> ExprVisitorReturnType
     func visitUnaryExpr(_ expr: Expr.Unary) throws -> ExprVisitorReturnType
+    func visitVariableExpr(_ expr: Expr.Variable) throws -> ExprVisitorReturnType
 }
 
 class Expr {
@@ -64,6 +65,18 @@ class Expr {
 
         override func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturnType {
             return try visitor.visitUnaryExpr(self)
+        }
+    }
+
+    class Variable: Expr {
+        let name: Token
+
+        init(name: Token) {
+            self.name = name
+        }
+
+        override func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturnType {
+            return try visitor.visitVariableExpr(self)
         }
     }
 }
