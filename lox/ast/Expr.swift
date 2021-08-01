@@ -2,14 +2,14 @@
 
 protocol ExprVisitor {
     associatedtype ReturnType
-    func visitBinaryExpr(_ expr: Expr.Binary) -> ReturnType
-    func visitGroupingExpr(_ expr: Expr.Grouping) -> ReturnType
-    func visitLiteralExpr(_ expr: Expr.Literal) -> ReturnType
-    func visitUnaryExpr(_ expr: Expr.Unary) -> ReturnType
+    func visitBinaryExpr(_ expr: Expr.Binary) throws -> ReturnType
+    func visitGroupingExpr(_ expr: Expr.Grouping) throws -> ReturnType
+    func visitLiteralExpr(_ expr: Expr.Literal) throws -> ReturnType
+    func visitUnaryExpr(_ expr: Expr.Unary) throws -> ReturnType
 }
 
 class Expr {
-    func accept<V: ExprVisitor, R>(visitor: V) -> R where R == V.ReturnType {
+    func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ReturnType {
         fatalError()
     }
 
@@ -24,8 +24,8 @@ class Expr {
             self.right = right
         }
 
-        override func accept<V: ExprVisitor, R>(visitor: V) -> R where R == V.ReturnType {
-            return visitor.visitBinaryExpr(self)
+        override func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ReturnType {
+            return try visitor.visitBinaryExpr(self)
         }
     }
 
@@ -36,8 +36,8 @@ class Expr {
             self.expression = expression
         }
 
-        override func accept<V: ExprVisitor, R>(visitor: V) -> R where R == V.ReturnType {
-            return visitor.visitGroupingExpr(self)
+        override func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ReturnType {
+            return try visitor.visitGroupingExpr(self)
         }
     }
 
@@ -48,8 +48,8 @@ class Expr {
             self.value = value
         }
 
-        override func accept<V: ExprVisitor, R>(visitor: V) -> R where R == V.ReturnType {
-            return visitor.visitLiteralExpr(self)
+        override func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ReturnType {
+            return try visitor.visitLiteralExpr(self)
         }
     }
 
@@ -62,8 +62,8 @@ class Expr {
             self.right = right
         }
 
-        override func accept<V: ExprVisitor, R>(visitor: V) -> R where R == V.ReturnType {
-            return visitor.visitUnaryExpr(self)
+        override func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ReturnType {
+            return try visitor.visitUnaryExpr(self)
         }
     }
 }

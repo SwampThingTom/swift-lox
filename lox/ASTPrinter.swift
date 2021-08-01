@@ -10,15 +10,19 @@ import Foundation
 class ASTPrinter: ExprVisitor {
     
     func print(expr: Expr) -> String {
-        expr.accept(visitor: self)
+        do {
+            return try expr.accept(visitor: self)
+        } catch {
+            return error.localizedDescription
+        }
     }
     
-    func visitBinaryExpr(_ expr: Expr.Binary) -> String {
-        parenthesize(name: expr.oper.lexeme, expressions: expr.left, expr.right)
+    func visitBinaryExpr(_ expr: Expr.Binary) throws -> String {
+        try parenthesize(name: expr.oper.lexeme, expressions: expr.left, expr.right)
     }
     
-    func visitGroupingExpr(_ expr: Expr.Grouping) -> String {
-        parenthesize(name: "group", expressions: expr.expression)
+    func visitGroupingExpr(_ expr: Expr.Grouping) throws -> String {
+        try parenthesize(name: "group", expressions: expr.expression)
     }
     
     func visitLiteralExpr(_ expr: Expr.Literal) -> String {
@@ -26,13 +30,13 @@ class ASTPrinter: ExprVisitor {
         return "\(value)"
     }
     
-    func visitUnaryExpr(_ expr: Expr.Unary) -> String {
-        parenthesize(name: expr.oper.lexeme, expressions: expr.right)
+    func visitUnaryExpr(_ expr: Expr.Unary) throws -> String {
+        try parenthesize(name: expr.oper.lexeme, expressions: expr.right)
     }
     
-    private func parenthesize(name: String, expressions: Expr...) -> String {
-        let operands = expressions
-            .map() { $0.accept(visitor: self) }
+    private func parenthesize(name: String, expressions: Expr...) throws -> String {
+        let operands = try expressions
+            .map() { try $0.accept(visitor: self) }
             .joined(separator: " ")
         return "(\(name) \(operands))"
     }
