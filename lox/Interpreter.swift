@@ -14,18 +14,28 @@ enum RuntimeError: Error {
 
 class Interpreter {
     
+    let io: LoxIO
     var errorReporter: ErrorReporting!
     
-    func interpret(expr: Expr) {
+    init(io: LoxIO) {
+        self.io = io
+    }
+    
+    func interpret(_ statements: [Stmt]) {
         do {
-            let value = try evaluate(expr)
-            print(stringify(value))
+            for statement in statements {
+                try execute(statement)
+            }
         } catch let error as RuntimeError {
             errorReporter.error(runtimeError: error)
         } catch {
             let unexpectedError = RuntimeError.unexpected("Unexpected runtime error: \(error.localizedDescription)")
             errorReporter.error(runtimeError: unexpectedError)
         }
+    }
+    
+    private func execute(_ stmt: Stmt) throws {
+        try stmt.accept(visitor: self)
     }
     
     private func evaluate(_ expr: Expr) throws -> Any? {
@@ -159,5 +169,19 @@ extension Interpreter: ExprVisitor {
     
     private func isTruthy(_ value: Any?) -> Bool {
         value as? Bool ?? false
+    }
+}
+
+// MARK: - StmtVisitor
+
+extension Interpreter: StmtVisitor {
+    
+    func visitExpressionStmt(_ stmt: Stmt.Expression) throws -> Void {
+        _ = try evaluate(stmt.expression)
+    }
+    
+    func visitPrintStmt(_ stmt: Stmt.Print) throws -> Void {
+        let value = try evaluate(stmt.expression)
+        io.printLine(stringify(value))
     }
 }

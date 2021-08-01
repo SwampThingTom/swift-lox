@@ -34,8 +34,36 @@ class Parser {
         self.tokens = tokens
     }
     
-    func parse() -> Expr? {
-        try? expression()
+    func parse() -> [Stmt] {
+        do {
+            var statements = [Stmt]()
+            while !isAtEnd {
+                statements.append(try statement())
+            }
+            return statements
+        } catch {
+            // TODO:
+            return []
+        }
+    }
+    
+    private func statement() throws -> Stmt {
+        if match(tokenType: .keywordPrint) {
+            return try printStatement()
+        }
+        return try expressionStatement()
+    }
+    
+    private func printStatement() throws -> Stmt {
+        let value = try expression()
+        try consume(tokenType: .semicolon, errorIfMissing: "Expect ; after value.")
+        return Stmt.Print(expression: value)
+    }
+    
+    private func expressionStatement() throws -> Stmt {
+        let value = try expression()
+        try consume(tokenType: .semicolon, errorIfMissing: "Expect ; after expression.")
+        return Stmt.Expression(expression: value)
     }
     
     private func expression() throws -> Expr {

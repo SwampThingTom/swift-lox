@@ -52,7 +52,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "test.lox"
+            argument = "&quot;$(PROJECT_DIR)/test.lox&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
