@@ -6,6 +6,7 @@ protocol ExprVisitor {
     func visitBinaryExpr(_ expr: Expr.Binary) throws -> ExprVisitorReturnType
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> ExprVisitorReturnType
     func visitLiteralExpr(_ expr: Expr.Literal) throws -> ExprVisitorReturnType
+    func visitLogicalExpr(_ expr: Expr.Logical) throws -> ExprVisitorReturnType
     func visitUnaryExpr(_ expr: Expr.Unary) throws -> ExprVisitorReturnType
     func visitVariableExpr(_ expr: Expr.Variable) throws -> ExprVisitorReturnType
 }
@@ -66,6 +67,22 @@ class Expr {
 
         override func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturnType {
             return try visitor.visitLiteralExpr(self)
+        }
+    }
+
+    class Logical: Expr {
+        let left: Expr
+        let oper: Token
+        let right: Expr
+
+        init(left: Expr, oper: Token, right: Expr) {
+            self.left = left
+            self.oper = oper
+            self.right = right
+        }
+
+        override func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturnType {
+            return try visitor.visitLogicalExpr(self)
         }
     }
 
