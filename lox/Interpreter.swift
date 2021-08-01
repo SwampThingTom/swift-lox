@@ -12,7 +12,7 @@ enum RuntimeError: Error {
     case unexpected(String)
 }
 
-class Interpreter: ExprVisitor {
+class Interpreter {
     
     var errorReporter: ErrorReporting!
     
@@ -31,6 +31,21 @@ class Interpreter: ExprVisitor {
     private func evaluate(_ expr: Expr) throws -> Any? {
         try expr.accept(visitor: self)
     }
+    
+    private func stringify(_ value: Any?) -> String {
+        guard let value = value else { return "nil" }
+        if let numericValue = value as? Double {
+            let text = String(numericValue)
+            // print integral values as integers
+            return text.hasSuffix(".0") ? String(text.dropLast(2)) : text
+        }
+        return String(describing: value)
+    }
+}
+
+// MARK: - ExprVisitor
+
+extension Interpreter: ExprVisitor {
     
     func visitBinaryExpr(_ expr: Expr.Binary) throws -> Any? {
         let left = try evaluate(expr.left)
@@ -144,15 +159,5 @@ class Interpreter: ExprVisitor {
     
     private func isTruthy(_ value: Any?) -> Bool {
         value as? Bool ?? false
-    }
-    
-    private func stringify(_ value: Any?) -> String {
-        guard let value = value else { return "nil" }
-        if let numericValue = value as? Double {
-            let text = String(numericValue)
-            // print integral values as integers
-            return text.hasSuffix(".0") ? String(text.dropLast(2)) : text
-        }
-        return String(describing: value)
     }
 }
