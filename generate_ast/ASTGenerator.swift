@@ -20,6 +20,13 @@ class ASTGenerator {
                     "Literal  : Any? value",
                     "Unary    : Token oper, Expr right"
                   ])
+        
+        defineAst(outputDirectoryURL: URL(fileURLWithPath: outputDirectory),
+                  baseName: "Stmt",
+                  types: [
+                    "Expression : Expr expression",
+                    "Print      : Expr expression"
+                  ])
     }
     
     private func defineAst(outputDirectoryURL: URL,
@@ -59,13 +66,13 @@ class ASTGenerator {
                        baseName: String,
                        types: [String]) {
         writer.printLine("protocol \(baseName)Visitor {")
-        writer.printLine("    associatedtype ReturnType")
+        writer.printLine("    associatedtype \(baseName)VisitorReturnType")
         
         for type in types {
             let typeName = type.split(separator: ":")[0].trimmingCharacters(in: .whitespaces)
             let funcName = "visit\(typeName)\(baseName)"
             let arguments = "_ \(baseName.lowercased()): \(baseName).\(typeName)"
-            writer.printLine("    func \(funcName)(\(arguments)) throws -> ReturnType")
+            writer.printLine("    func \(funcName)(\(arguments)) throws -> \(baseName)VisitorReturnType")
         }
         
         writer.printLine("}")
@@ -117,6 +124,6 @@ class ASTGenerator {
     }
     
     private func acceptVisitorFunc(for baseName: String) -> String {
-        "func accept<V: \(baseName)Visitor, R>(visitor: V) throws -> R where R == V.ReturnType"
+        "func accept<V: \(baseName)Visitor, R>(visitor: V) throws -> R where R == V.\(baseName)VisitorReturnType"
     }
 }
