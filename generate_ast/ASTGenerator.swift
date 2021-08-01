@@ -18,14 +18,16 @@ class ASTGenerator {
                     "Binary   : Expr left, Token oper, Expr right",
                     "Grouping : Expr expression",
                     "Literal  : Any? value",
-                    "Unary    : Token oper, Expr right"
+                    "Unary    : Token oper, Expr right",
+                    "Variable : Token name"
                   ])
         
         defineAst(outputDirectoryURL: URL(fileURLWithPath: outputDirectory),
                   baseName: "Stmt",
                   types: [
                     "Expression : Expr expression",
-                    "Print      : Expr expression"
+                    "Print      : Expr expression",
+                    "Var        : Token name, Expr? initializer"
                   ])
     }
     
