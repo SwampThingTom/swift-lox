@@ -26,6 +26,7 @@ class ASTGenerator {
         defineAst(outputDirectoryURL: URL(fileURLWithPath: outputDirectory),
                   baseName: "Stmt",
                   types: [
+                    "Block      : [Stmt] statements",
                     "Expression : Expr expression",
                     "Print      : Expr expression",
                     "Var        : Token name, Expr? initializer"
