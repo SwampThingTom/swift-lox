@@ -21,6 +21,7 @@
 		E25CFD7526B5EB1F0053DD08 /* ASTPrinter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CFD7426B5EB1F0053DD08 /* ASTPrinter.swift */; };
 		E25CFD7726B60F5E0053DD08 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CFD7626B60F5E0053DD08 /* Parser.swift */; };
 		E25CFD7926B6429B0053DD08 /* Interpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CFD7826B6429B0053DD08 /* Interpreter.swift */; };
+		E25CFD7B26B7062F0053DD08 /* Stmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CFD7A26B7062F0053DD08 /* Stmt.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -61,6 +62,7 @@
 		E25CFD7426B5EB1F0053DD08 /* ASTPrinter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTPrinter.swift; sourceTree = "<group>"; };
 		E25CFD7626B60F5E0053DD08 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		E25CFD7826B6429B0053DD08 /* Interpreter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interpreter.swift; sourceTree = "<group>"; };
+		E25CFD7A26B7062F0053DD08 /* Stmt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stmt.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				E25CFD7226B5D4D90053DD08 /* Expr.swift */,
+				E25CFD7A26B7062F0053DD08 /* Stmt.swift */,
 			);
 			path = ast;
 			sourceTree = "<group>";
@@ -226,6 +229,7 @@
 				E25CFD7726B60F5E0053DD08 /* Parser.swift in Sources */,
 				E25CFD7526B5EB1F0053DD08 /* ASTPrinter.swift in Sources */,
 				E25CFD1326B4DA780053DD08 /* Token.swift in Sources */,
+				E25CFD7B26B7062F0053DD08 /* Stmt.swift in Sources */,
 				E25CFD7926B6429B0053DD08 /* Interpreter.swift in Sources */,
 				E25CFD1126B4D8AD0053DD08 /* TokenType.swift in Sources */,
 				E25CFD7326B5D4D90053DD08 /* Expr.swift in Sources */,
