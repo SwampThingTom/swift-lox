@@ -21,8 +21,11 @@ class Lox: ErrorReporting {
     private let io: LoxIO
     var hadError = false
     
+    private let interpreter = Interpreter()
+    
     init(io: LoxIO) {
         self.io = io
+        interpreter.errorReporter = self
     }
     
     func runScript(_ script: String) {
@@ -61,7 +64,7 @@ class Lox: ErrorReporting {
         let parser = Parser(tokens: tokens, errorReporter: self)
         guard let expression = parser.parse(), !hadError else { return }
         
-        io.printLine(ASTPrinter().print(expr: expression))
+        interpreter.interpret(expr: expression)
     }
     
     func error(at token: Token, message: String) {
