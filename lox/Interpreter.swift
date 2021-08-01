@@ -192,6 +192,10 @@ extension Interpreter: ExprVisitor {
 
 extension Interpreter: StmtVisitor {
     
+    func visitBlockStmt(_ stmt: Stmt.Block) throws -> Void {
+        // TODO: implement
+    }
+    
     func visitExpressionStmt(_ stmt: Stmt.Expression) throws -> Void {
         _ = try evaluate(stmt.expression)
     }
