@@ -10,6 +10,7 @@ import Foundation
 protocol ErrorReporting {
     var hadError: Bool { get }
     func error(line: Int, message: String)
+    func error(at token: Token, message: String)
 }
 
 class Lox: ErrorReporting {
@@ -55,11 +56,21 @@ class Lox: ErrorReporting {
     private func run(_ text: String) {
         let scanner = Scanner(source: text, errorReporter: self)
         let tokens = scanner.scanTokens()
-        for token in tokens {
-            console.printLine("\(token)")
-        }
+        
+        let parser = Parser(tokens: tokens, errorReporter: self)
+        guard let expression = parser.parse(), !hadError else { return }
+        
+        io.printLine(ASTPrinter().print(expr: expression))
     }
     
+    func error(at token: Token, message: String) {
+        if token.tokenType == .eof {
+            report(line: token.line, component: " at end", message: message)
+        } else {
+            report(line: token.line, component: " at \(token.lexeme)", message: message)
+        }
+    }
+
     func error(line: Int, message: String) {
         report(line: line, component: "", message: message)
     }
