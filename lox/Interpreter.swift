@@ -8,6 +8,8 @@
 import Foundation
 
 enum RuntimeError: Error {
+    case functionArgumentMismatch(Token, String)
+    case notCallable(Token, String)
     case typeMismatch(Token, String)
     case undefinedVariable(Token, String)
     case unexpected(String)
@@ -128,8 +130,16 @@ extension Interpreter: ExprVisitor {
     }
     
     func visitCallExpr(_ expr: Expr.Call) throws -> Any? {
-        // TODO: Implement
-        nil
+        let callee = try evaluate(expr.callee)
+        let arguments = try expr.arguments.map() { try evaluate($0) }
+        guard let function = callee as? LoxCallable else {
+            throw RuntimeError.notCallable(expr.paren, "Can only call functions and classes.")
+        }
+        if arguments.count != function.arity {
+            throw RuntimeError.functionArgumentMismatch(expr.paren,
+                                                        "Expected \(function.arity) arguments but got \(arguments.count).")
+        }
+        return function.call(interpreter: self, arguments: arguments)
     }
     
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> Any? {

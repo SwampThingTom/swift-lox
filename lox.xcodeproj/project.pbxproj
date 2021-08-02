@@ -23,6 +23,7 @@
 		E25CFD7926B6429B0053DD08 /* Interpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CFD7826B6429B0053DD08 /* Interpreter.swift */; };
 		E25CFD7B26B7062F0053DD08 /* Stmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CFD7A26B7062F0053DD08 /* Stmt.swift */; };
 		E25CFD7F26B736370053DD08 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CFD7E26B736370053DD08 /* Environment.swift */; };
+		E25CFD8126B8230F0053DD08 /* LoxCallable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CFD8026B8230F0053DD08 /* LoxCallable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -65,6 +66,7 @@
 		E25CFD7826B6429B0053DD08 /* Interpreter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interpreter.swift; sourceTree = "<group>"; };
 		E25CFD7A26B7062F0053DD08 /* Stmt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stmt.swift; sourceTree = "<group>"; };
 		E25CFD7E26B736370053DD08 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
+		E25CFD8026B8230F0053DD08 /* LoxCallable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoxCallable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				E25CFD7E26B736370053DD08 /* Environment.swift */,
 				E25CFD7826B6429B0053DD08 /* Interpreter.swift */,
 				E25CFD0C26B420BD0053DD08 /* Lox.swift */,
+				E25CFD8026B8230F0053DD08 /* LoxCallable.swift */,
 				E25CFD5B26B5A3E40053DD08 /* LoxIO.swift */,
 				E25CFD7626B60F5E0053DD08 /* Parser.swift */,
 				E25CFD1426B4DBE40053DD08 /* Scanner.swift */,
@@ -238,6 +241,7 @@
 				E25CFD7F26B736370053DD08 /* Environment.swift in Sources */,
 				E25CFD7326B5D4D90053DD08 /* Expr.swift in Sources */,
 				E25CFD0F26B4221E0053DD08 /* ConsoleIO.swift in Sources */,
+				E25CFD8126B8230F0053DD08 /* LoxCallable.swift in Sources */,
 				E25CFD1526B4DBE40053DD08 /* Scanner.swift in Sources */,
 				E25CFD0D26B420BD0053DD08 /* Lox.swift in Sources */,
 			);
