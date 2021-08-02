@@ -16,11 +16,27 @@ enum RuntimeError: Error {
 }
 
 class Interpreter {
-    
+
+    private static let globals = { () -> Environment in
+        var globalEnvironment = Environment()
+        let clockToken = Token(tokenType: .keywordFun,
+                               lexeme: "clock",
+                               literal: nil,
+                               line: 0)
+        class ClockCallable: LoxCallable {
+            let arity = 0
+            func call(interpreter: Interpreter, arguments: [Any?]) throws -> Any? {
+                return Date().timeIntervalSince1970 as Double
+            }
+        }
+        globalEnvironment.define(token: clockToken, value: ClockCallable())
+        return globalEnvironment
+    }()
+
     var errorReporter: ErrorReporting!
     
     private let io: LoxIO
-    private var environment = Environment()
+    private var environment = globals
     
     init(io: LoxIO) {
         self.io = io
