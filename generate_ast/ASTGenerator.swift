@@ -17,6 +17,7 @@ class ASTGenerator {
                   types: [
                     "Assign   : Token name, Expr? value",
                     "Binary   : Expr left, Token oper, Expr right",
+                    "Call     : Expr callee, Token paren, [Expr] arguments",
                     "Grouping : Expr expression",
                     "Literal  : Any? value",
                     "Logical  : Expr left, Token oper, Expr right",
