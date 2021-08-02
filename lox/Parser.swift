@@ -64,6 +64,9 @@ class Parser {
     }
     
     private func statement() throws -> Stmt {
+        if match(tokenType: .keywordFor) {
+            return try forStatement()
+        }
         if match(tokenType: .keywordIf) {
             return try ifStatement()
         }
@@ -77,6 +80,49 @@ class Parser {
             return Stmt.Block(statements: try block())
         }
         return try expressionStatement()
+    }
+    
+    private func forStatement() throws -> Stmt {
+        try consume(tokenType: .leftParen, errorIfMissing: "Expect '(' after 'for'.")
+        let initializer = try forInitializer()
+        
+        let condition = !check(tokenType: .semicolon) ? try expression() : Expr.Literal(value: true)
+        try consume(tokenType: .semicolon, errorIfMissing: "Expect ';' after loop condition.")
+        
+        let increment = !check(tokenType: .rightParen) ? try expression() : nil
+        try consume(tokenType: .rightParen, errorIfMissing: "Expect ')' after for clauses.")
+        
+        let body = try statement()
+        
+        return try buildForStatement(initializer: initializer,
+                                     condition: condition,
+                                     increment: increment,
+                                     body: body)
+    }
+    
+    private func forInitializer() throws -> Stmt? {
+        if match(tokenType: .semicolon) { return nil }
+        if match(tokenType: .keywordVar) { return try varDeclaration() }
+        return try expressionStatement()
+    }
+    
+    private func buildForStatement(initializer: Stmt?,
+                                   condition: Expr,
+                                   increment: Expr?,
+                                   body: Stmt) throws -> Stmt {
+        var builder = body
+        
+        if let increment = increment {
+            builder = Stmt.Block(statements: [builder, Stmt.Expression(expression: increment)])
+        }
+        
+        builder = Stmt.While(condition: condition, body: builder)
+        
+        if let initializer = initializer {
+            builder = Stmt.Block(statements: [initializer, builder])
+        }
+        
+        return builder
     }
     
     private func ifStatement() throws -> Stmt {
