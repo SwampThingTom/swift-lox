@@ -139,7 +139,7 @@ extension Interpreter: ExprVisitor {
             throw RuntimeError.functionArgumentMismatch(expr.paren,
                                                         "Expected \(function.arity) arguments but got \(arguments.count).")
         }
-        return function.call(interpreter: self, arguments: arguments)
+        return try function.call(interpreter: self, arguments: arguments)
     }
     
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> Any? {
