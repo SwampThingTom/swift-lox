@@ -17,10 +17,13 @@ enum RuntimeError: Error {
 
 class Interpreter {
 
-    private static let globals = { () -> Environment in
+    static let globals = { () -> Environment in
         var globalEnvironment = Environment()
         class ClockCallable: LoxCallable {
             let arity = 0
+            var description: String {
+                "<native fn>"
+            }
             func call(interpreter: Interpreter, arguments: [Any?]) throws -> Any? {
                 return Date().timeIntervalSince1970 as Double
             }
@@ -51,11 +54,7 @@ class Interpreter {
         }
     }
     
-    private func execute(_ stmt: Stmt) throws {
-        try stmt.accept(visitor: self)
-    }
-    
-    private func execute(block: [Stmt], environment: Environment) throws {
+    func execute(block: [Stmt], environment: Environment) throws {
         let previousEnvironment = self.environment
         self.environment = environment
         defer {
@@ -65,6 +64,10 @@ class Interpreter {
         for statement in block {
             try execute(statement)
         }
+    }
+
+    private func execute(_ stmt: Stmt) throws {
+        try stmt.accept(visitor: self)
     }
     
     private func evaluate(_ expr: Expr) throws -> Any? {
@@ -254,7 +257,8 @@ extension Interpreter: StmtVisitor {
     }
     
     func visitFunctionStmt(_ stmt: Stmt.Function) throws -> Void {
-        // TODO: implement
+        let function = LoxFunction(stmt)
+        environment.define(name: stmt.name.lexeme, value: function)
     }
     
     func visitIfStmt(_ stmt: Stmt.If) throws -> Void {

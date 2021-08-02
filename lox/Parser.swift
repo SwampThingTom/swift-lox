@@ -46,6 +46,9 @@ class Parser {
     
     private func declaration() -> Stmt? {
         do {
+            if match(tokenType: .keywordFun) {
+                return try function(kind: "function")
+            }
             if match(tokenType: .keywordVar) {
                 return try varDeclaration()
             }
@@ -156,6 +159,29 @@ class Parser {
         return Stmt.Expression(expression: value)
     }
     
+    private func function(kind: String) throws -> Stmt.Function {
+        let name = try consume(tokenType: .identifier, errorIfMissing: "Expect \(kind) name.")
+        try consume(tokenType: .leftParen, errorIfMissing: "Expect '(' after \(kind) name.")
+        
+        var parameters = [Token]()
+        if !check(tokenType: .rightParen) {
+            repeat {
+                let param = try consume(tokenType: .identifier, errorIfMissing: "Expect parameter name.")
+                if parameters.count == 255 {
+                    // report error but do not throw
+                    _ = error(at: peek, message: "Can't have more than 255 parameters.")
+                    continue
+                }
+                parameters.append(param)
+            } while match(tokenType: .comma)
+        }
+        try consume(tokenType: .rightParen, errorIfMissing: "Expect ')' after parameters.")
+        
+        try consume(tokenType: .leftBrace, errorIfMissing: "Expect '{' before \(kind) body.")
+        let body = try block()
+        return Stmt.Function(name: name, params: parameters, body: body)
+    }
+    
     private func block() throws -> [Stmt] {
         var statements = [Stmt]()
         
@@ -243,10 +269,9 @@ class Parser {
                 if arguments.count == 255 {
                     // report error but don't throw
                     _ = error(at: peek, message: "Can't have more than 255 arguments.")
+                    continue
                 }
-                if arguments.count < 255 {
-                    arguments.append(arg)
-                }
+                arguments.append(arg)
             } while match(tokenType: .comma)
         }
         let paren = try consume(tokenType: .rightParen, errorIfMissing: "Expect ')' after arguments.")

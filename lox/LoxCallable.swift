@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol LoxCallable {
+protocol LoxCallable: CustomStringConvertible {
     var arity: Int { get }
     func call(interpreter: Interpreter, arguments: [Any?]) throws -> Any?
 }
