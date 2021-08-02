@@ -113,7 +113,7 @@ class Parser {
     }
     
     private func assignment() throws -> Expr {
-        let expr = try equality()
+        let expr = try or()
         
         if match(tokenType: .equal) {
             let equals = previous
@@ -127,6 +127,14 @@ class Parser {
         }
         
         return expr
+    }
+    
+    private func or() throws -> Expr {
+        try parseLogicalExpr(parseOperand: and, operations: .keywordOr)
+    }
+    
+    private func and() throws -> Expr {
+        try parseLogicalExpr(parseOperand: equality, operations: .keywordAnd)
     }
     
     private func expression() throws -> Expr {
@@ -225,6 +233,16 @@ class Parser {
             let oper = previous
             let right = try parseOperand()
             expr = Expr.Binary(left: expr, oper: oper, right: right)
+        }
+        return expr
+    }
+    
+    private func parseLogicalExpr(parseOperand: () throws -> Expr, operations: TokenType...) throws -> Expr {
+        var expr = try parseOperand()
+        while match(any: operations) {
+            let oper = previous
+            let right = try parseOperand()
+            expr = Expr.Logical(left: expr, oper: oper, right: right)
         }
         return expr
     }

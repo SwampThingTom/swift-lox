@@ -136,8 +136,15 @@ extension Interpreter: ExprVisitor {
     }
     
     func visitLogicalExpr(_ expr: Expr.Logical) throws -> Any? {
-        // TODO: implement
-        nil
+        let left = try evaluate(expr.left)
+        
+        if expr.oper.tokenType == .keywordOr {
+            if isTruthy(left) { return left }
+        } else {
+            if !isTruthy(left) { return left }
+        }
+        
+        return try evaluate(expr.right)
     }
     
     func visitUnaryExpr(_ expr: Expr.Unary) throws -> Any? {
