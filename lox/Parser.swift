@@ -76,6 +76,9 @@ class Parser {
         if match(tokenType: .keywordPrint) {
             return try printStatement()
         }
+        if match(tokenType: .keywordReturn) {
+            return try returnStatement()
+        }
         if match(tokenType: .keywordWhile) {
             return try whileStatement()
         }
@@ -143,6 +146,13 @@ class Parser {
         let value = try expression()
         try consume(tokenType: .semicolon, errorIfMissing: "Expect ; after value.")
         return Stmt.Print(expression: value)
+    }
+    
+    private func returnStatement() throws -> Stmt {
+        let keyword = previous
+        let value = !check(tokenType: .semicolon) ? try expression() : nil
+        try consume(tokenType: .semicolon, errorIfMissing: "Expect ';' after return value.")
+        return Stmt.Return(keyword: keyword, value: value)
     }
     
     private func whileStatement() throws -> Stmt {

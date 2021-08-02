@@ -15,6 +15,10 @@ enum RuntimeError: Error {
     case unexpected(String)
 }
 
+enum ControlFlow: Error {
+    case functionReturn(Any?)
+}
+
 class Interpreter {
 
     static let globals = { () -> Environment in
@@ -257,7 +261,7 @@ extension Interpreter: StmtVisitor {
     }
     
     func visitFunctionStmt(_ stmt: Stmt.Function) throws -> Void {
-        let function = LoxFunction(stmt)
+        let function = LoxFunction(stmt, closure: environment)
         environment.define(name: stmt.name.lexeme, value: function)
     }
     
@@ -274,8 +278,12 @@ extension Interpreter: StmtVisitor {
         io.printLine(stringify(value))
     }
     
-    func visitReturnStmt(_ stmt: Stmt.Return) throws -> () {
-        // TODO: Implement
+    func visitReturnStmt(_ stmt: Stmt.Return) throws -> Void {
+        var value: Any? = nil
+        if let valueExpr = stmt.value {
+            value = try evaluate(valueExpr)
+        }
+        throw ControlFlow.functionReturn(value)
     }
     
     func visitVarStmt(_ stmt: Stmt.Var) throws -> Void {

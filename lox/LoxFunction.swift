@@ -10,6 +10,7 @@ import Foundation
 class LoxFunction: LoxCallable {
     
     private let declaration: Stmt.Function
+    private let closure: Environment
     
     var arity: Int {
         declaration.params.count
@@ -19,17 +20,22 @@ class LoxFunction: LoxCallable {
         "<fn \(declaration.name.lexeme)>"
     }
     
-    init(_ declaration: Stmt.Function) {
+    init(_ declaration: Stmt.Function, closure: Environment) {
         self.declaration = declaration
+        self.closure = closure
     }
     
     func call(interpreter: Interpreter, arguments: [Any?]) throws -> Any? {
-        let environment = Environment(enclosing: Interpreter.globals)
+        let environment = Environment(enclosing: closure)
         for index in 0 ..< declaration.params.count {
             environment.define(token: declaration.params[index], value: arguments[index])
         }
         
-        try interpreter.execute(block: declaration.body, environment: environment)
+        do {
+            try interpreter.execute(block: declaration.body, environment: environment)
+        } catch ControlFlow.functionReturn(let value) {
+            return value
+        }
         return nil
     }
 }
