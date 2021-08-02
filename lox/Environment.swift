@@ -16,8 +16,12 @@ class Environment {
         self.enclosing = enclosing
     }
     
+    func define(name: String, value: Any?) {
+        values[name] = value
+    }
+    
     func define(token: Token, value: Any?) {
-        values[token.lexeme] = value
+        define(name: token.lexeme, value: value)
     }
     
     func assign(token: Token, value: Any?) throws {

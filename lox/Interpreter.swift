@@ -19,17 +19,13 @@ class Interpreter {
 
     private static let globals = { () -> Environment in
         var globalEnvironment = Environment()
-        let clockToken = Token(tokenType: .keywordFun,
-                               lexeme: "clock",
-                               literal: nil,
-                               line: 0)
         class ClockCallable: LoxCallable {
             let arity = 0
             func call(interpreter: Interpreter, arguments: [Any?]) throws -> Any? {
                 return Date().timeIntervalSince1970 as Double
             }
         }
-        globalEnvironment.define(token: clockToken, value: ClockCallable())
+        globalEnvironment.define(name: "clock", value: ClockCallable())
         return globalEnvironment
     }()
 
