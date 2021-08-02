@@ -253,6 +253,10 @@ extension Interpreter: StmtVisitor {
         _ = try evaluate(stmt.expression)
     }
     
+    func visitFunctionStmt(_ stmt: Stmt.Function) throws -> Void {
+        // TODO: implement
+    }
+    
     func visitIfStmt(_ stmt: Stmt.If) throws -> Void {
         if isTruthy(try evaluate(stmt.condition)) {
             try execute(stmt.thenBranch)
