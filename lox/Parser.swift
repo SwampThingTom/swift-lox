@@ -70,6 +70,9 @@ class Parser {
         if match(tokenType: .keywordPrint) {
             return try printStatement()
         }
+        if match(tokenType: .keywordWhile) {
+            return try whileStatement()
+        }
         if match(tokenType: .leftBrace) {
             return Stmt.Block(statements: try block())
         }
@@ -91,6 +94,14 @@ class Parser {
         let value = try expression()
         try consume(tokenType: .semicolon, errorIfMissing: "Expect ; after value.")
         return Stmt.Print(expression: value)
+    }
+    
+    private func whileStatement() throws -> Stmt {
+        try consume(tokenType: .leftParen, errorIfMissing: "Expect '(' after 'while'.")
+        let condition = try expression()
+        try consume(tokenType: .rightParen, errorIfMissing: "Expect ')' after condition.")
+        let body = try statement()
+        return Stmt.While(condition: condition, body: body)
     }
     
     private func expressionStatement() throws -> Stmt {

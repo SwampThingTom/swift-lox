@@ -248,6 +248,8 @@ extension Interpreter: StmtVisitor {
     }
     
     func visitWhileStmt(_ stmt: Stmt.While) throws -> Void {
-        // TODO: Implement
+        while isTruthy(try evaluate(stmt.condition)) {
+            try execute(stmt.body)
+        }
     }
 }
