@@ -127,6 +127,11 @@ extension Interpreter: ExprVisitor {
         return nil
     }
     
+    func visitCallExpr(_ expr: Expr.Call) throws -> Any? {
+        // TODO: Implement
+        nil
+    }
+    
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> Any? {
         try evaluate(expr.expression)
     }

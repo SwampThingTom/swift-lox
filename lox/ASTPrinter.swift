@@ -25,6 +25,10 @@ class ASTPrinter: ExprVisitor {
         try parenthesize(name: expr.oper.lexeme, expressions: expr.left, expr.right)
     }
     
+    func visitCallExpr(_ expr: Expr.Call) throws -> String {
+        try parenthesize(name: "call", expressions: expr)
+    }
+    
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> String {
         try parenthesize(name: "group", expressions: expr.expression)
     }
