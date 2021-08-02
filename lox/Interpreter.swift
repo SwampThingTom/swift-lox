@@ -274,6 +274,10 @@ extension Interpreter: StmtVisitor {
         io.printLine(stringify(value))
     }
     
+    func visitReturnStmt(_ stmt: Stmt.Return) throws -> () {
+        // TODO: Implement
+    }
+    
     func visitVarStmt(_ stmt: Stmt.Var) throws -> Void {
         var value: Any? = nil
         if let initializer = stmt.initializer {

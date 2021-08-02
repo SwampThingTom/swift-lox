@@ -7,6 +7,7 @@ protocol StmtVisitor {
     func visitFunctionStmt(_ stmt: Stmt.Function) throws -> StmtVisitorReturnType
     func visitIfStmt(_ stmt: Stmt.If) throws -> StmtVisitorReturnType
     func visitPrintStmt(_ stmt: Stmt.Print) throws -> StmtVisitorReturnType
+    func visitReturnStmt(_ stmt: Stmt.Return) throws -> StmtVisitorReturnType
     func visitVarStmt(_ stmt: Stmt.Var) throws -> StmtVisitorReturnType
     func visitWhileStmt(_ stmt: Stmt.While) throws -> StmtVisitorReturnType
 }
@@ -81,6 +82,20 @@ class Stmt {
 
         override func accept<V: StmtVisitor, R>(visitor: V) throws -> R where R == V.StmtVisitorReturnType {
             return try visitor.visitPrintStmt(self)
+        }
+    }
+
+    class Return: Stmt {
+        let keyword: Token
+        let value: Expr?
+
+        init(keyword: Token, value: Expr?) {
+            self.keyword = keyword
+            self.value = value
+        }
+
+        override func accept<V: StmtVisitor, R>(visitor: V) throws -> R where R == V.StmtVisitorReturnType {
+            return try visitor.visitReturnStmt(self)
         }
     }
 
