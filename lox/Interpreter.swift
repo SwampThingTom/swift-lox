@@ -208,7 +208,9 @@ extension Interpreter: ExprVisitor {
     }
     
     private func isTruthy(_ value: Any?) -> Bool {
-        value as? Bool ?? false
+        if value == nil { return false }
+        if let value = value as? Bool { return value }
+        return true
     }
 }
 
