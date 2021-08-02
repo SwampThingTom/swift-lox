@@ -246,4 +246,8 @@ extension Interpreter: StmtVisitor {
         }
         environment.define(token: stmt.name, value: value)
     }
+    
+    func visitWhileStmt(_ stmt: Stmt.While) throws -> Void {
+        // TODO: Implement
+    }
 }
