@@ -127,3 +127,13 @@ class Stmt {
         }
     }
 }
+
+extension Stmt: Hashable {
+    static func ==(lhs: Stmt, rhs: Stmt) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
+
+    func hash(into hasher: inout Hasher) {
+        return ObjectIdentifier(self).hash(into: &hasher)
+    }
+}
