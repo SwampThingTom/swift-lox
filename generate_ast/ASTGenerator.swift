@@ -69,6 +69,18 @@ class ASTGenerator {
                        fieldList: fields)
         }
         
+        
+        writer.printLine("}")
+        
+        writer.printLine()
+        writer.printLine("extension \(baseName): Hashable {")
+        writer.printLine("    static func ==(lhs: \(baseName), rhs: \(baseName)) -> Bool {")
+        writer.printLine("        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)")
+        writer.printLine("    }")
+        writer.printLine()
+        writer.printLine("    func hash(into hasher: inout Hasher) {")
+        writer.printLine("        return ObjectIdentifier(self).hash(into: &hasher)")
+        writer.printLine("    }")
         writer.printLine("}")
     }
     
