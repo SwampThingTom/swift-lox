@@ -35,6 +35,10 @@ class Environment {
         values[token.lexeme] = value
     }
     
+    func assign(at distance: Int, token: Token, value: Any?) throws {
+        try ancestor(at: distance).values[token.lexeme] = value
+    }
+    
     func get(token: Token) throws -> Any? {
         guard let index = values.index(forKey: token.lexeme) else {
             guard let enclosing = enclosing else {
@@ -43,5 +47,20 @@ class Environment {
             return try enclosing.get(token: token)
         }
         return values[index].value
+    }
+    
+    func get(at distance: Int, token: Token) throws -> Any? {
+        try ancestor(at: distance).values[token.lexeme] as Any?
+    }
+    
+    private func ancestor(at distance: Int) throws -> Environment {
+        var environment = self
+        for _ in 0 ..< distance {
+            guard let enclosing = enclosing else {
+                throw RuntimeError.unexpected("Unable to find scope for variable.")
+            }
+            environment = enclosing
+        }
+        return environment
     }
 }

@@ -66,6 +66,10 @@ class Lox: ErrorReporting {
         let statements = parser.parse()
         guard !hadError else { return }
         
+        let resolver = Resolver(lox: self, interpreter: interpreter)
+        resolver.resolve(statements)
+        guard !hadError else { return }
+        
         interpreter.interpret(statements)
     }
     

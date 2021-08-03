@@ -41,6 +41,7 @@ class Interpreter {
     private let io: LoxIO
     private var globals = makeStaticGlobals()
     private var environment: Environment
+    private var locals = Dictionary<Expr, Int>()
     
     init(io: LoxIO) {
         self.io = io
@@ -70,6 +71,10 @@ class Interpreter {
         for statement in block {
             try execute(statement)
         }
+    }
+    
+    func resolve(_ expr: Expr, depth: Int) {
+        locals[expr] = depth
     }
 
     private func execute(_ stmt: Stmt) throws {
@@ -202,7 +207,14 @@ extension Interpreter: ExprVisitor {
     }
     
     func visitVariableExpr(_ expr: Expr.Variable) throws -> Any? {
-        try environment.get(token: expr.name)
+        try lookupVariable(named: expr.name, expr: expr)
+    }
+    
+    private func lookupVariable(named name: Token, expr: Expr) throws -> Any? {
+        guard let distance = locals[expr] else {
+            return try globals.get(token: name)
+        }
+        return try environment.get(at: distance, token: name)
     }
     
     func visitAssignExpr(_ expr: Expr.Assign) throws -> Any? {
@@ -210,7 +222,13 @@ extension Interpreter: ExprVisitor {
         if let exprValue = expr.value {
             value = try evaluate(exprValue)
         }
-        try environment.assign(token: expr.name, value: value)
+        
+        if let distance = locals[expr] {
+            try environment.assign(at: distance, token: expr.name, value: value)
+        } else {
+            try globals.assign(token: expr.name, value: value)
+        }
+        
         return value
     }
     
