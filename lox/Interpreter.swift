@@ -21,7 +21,7 @@ enum ControlFlow: Error {
 
 class Interpreter {
 
-    static let globals = { () -> Environment in
+    static let makeStaticGlobals = { () -> Environment in
         var globalEnvironment = Environment()
         class ClockCallable: LoxCallable {
             let arity = 0
@@ -34,15 +34,17 @@ class Interpreter {
         }
         globalEnvironment.define(name: "clock", value: ClockCallable())
         return globalEnvironment
-    }()
+    }
 
     var errorReporter: ErrorReporting!
     
     private let io: LoxIO
-    private var environment = globals
+    private var globals = makeStaticGlobals()
+    private var environment: Environment
     
     init(io: LoxIO) {
         self.io = io
+        environment = globals
     }
     
     func interpret(_ statements: [Stmt]) {
