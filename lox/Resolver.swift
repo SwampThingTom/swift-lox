@@ -128,7 +128,7 @@ class Resolver: ExprVisitor, StmtVisitor {
     }
     
     func visitVariableExpr(_ expr: Expr.Variable) throws -> Void {
-        guard let scope = scopes.last, !(scope[expr.name.lexeme] ?? true) else {
+        if let scope = scopes.last, let defined = scope[expr.name.lexeme], !defined {
             lox.error(at: expr.name, message: "Can't read local variable in its own initializer.")
             return
         }
@@ -152,16 +152,16 @@ class Resolver: ExprVisitor, StmtVisitor {
     }
     
     private func declare(_ token: Token) {
-        guard var scope = scopes.last else { return }
-        if scope.contains(key: token.lexeme) {
+        guard !scopes.isEmpty else { return }
+        if scopes[scopes.count - 1].contains(key: token.lexeme) {
             lox.error(at: token, message: "Already a variable with this name in this scope.")
         }
-        scope[token.lexeme] = false
+        scopes[scopes.count - 1][token.lexeme] = false
     }
     
     private func define(_ token: Token) {
-        guard var scope = scopes.last else { return }
-        scope[token.lexeme] = true
+        guard !scopes.isEmpty else { return }
+        scopes[scopes.count - 1][token.lexeme] = true
     }
     
     private func resolve(local expr: Expr, token: Token) {
@@ -190,6 +190,6 @@ class Resolver: ExprVisitor, StmtVisitor {
 
 extension Scope {
     func contains(key: String) -> Bool {
-        self.contains(where: { $0.key == key })
+        self[key] != nil
     }
 }
