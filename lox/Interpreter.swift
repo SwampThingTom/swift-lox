@@ -277,7 +277,9 @@ extension Interpreter: StmtVisitor {
     }
     
     func visitClassStmt(_ stmt: Stmt.Class) throws -> Void {
-        // TODO: Implement
+        environment.define(token: stmt.name, value: nil)
+        let klass = LoxClass(name: stmt.name.lexeme)
+        try environment.assign(token: stmt.name, value: klass)
     }
     
     func visitExpressionStmt(_ stmt: Stmt.Expression) throws -> Void {

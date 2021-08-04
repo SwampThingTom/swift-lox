@@ -44,7 +44,8 @@ class Resolver: ExprVisitor, StmtVisitor {
     }
     
     func visitClassStmt(_ stmt: Stmt.Class) throws -> Void {
-        // TODO: Implement
+        declare(stmt.name)
+        define(stmt.name)
     }
     
     func visitExpressionStmt(_ stmt: Stmt.Expression) throws -> Void {

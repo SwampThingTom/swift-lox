@@ -46,6 +46,9 @@ class Parser {
     
     private func declaration() -> Stmt? {
         do {
+            if match(tokenType: .keywordClass) {
+                return try classDeclaration()
+            }
             if match(tokenType: .keywordFun) {
                 return try function(kind: "function")
             }
@@ -57,6 +60,20 @@ class Parser {
             synchronize()
             return nil
         }
+    }
+    
+    private func classDeclaration() throws -> Stmt {
+        let name = try consume(tokenType: .identifier, errorIfMissing: "Expect class name.")
+        try consume(tokenType: .leftBrace, errorIfMissing: "Expect '{' before class body.")
+        
+        var methods = [Stmt.Function]()
+        while !check(tokenType: .rightBrace) && !isAtEnd {
+            methods.append(try function(kind: "method"))
+        }
+        
+        try consume(tokenType: .rightBrace, errorIfMissing: "Expect '}' after class body.")
+        
+        return Stmt.Class(name: name, methods: methods)
     }
     
     private func varDeclaration() throws -> Stmt {
