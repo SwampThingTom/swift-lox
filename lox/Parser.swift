@@ -281,6 +281,9 @@ class Parser {
         while true {
             if match(tokenType: .leftParen) {
                 expr = try finishCall(callee: expr)
+            } else if match(tokenType: .dot) {
+                let name = try consume(tokenType: .identifier, errorIfMissing: "Expect property name after '.'.")
+                expr = Expr.Get(object: expr, name: name)
             } else {
                 break
             }

@@ -10,7 +10,9 @@ import Foundation
 enum RuntimeError: Error {
     case functionArgumentMismatch(Token, String)
     case notCallable(Token, String)
+    case notInstance(Token, String)
     case typeMismatch(Token, String)
+    case undefinedProperty(Token, String)
     case undefinedVariable(Token, String)
     case unexpected(String)
 }
@@ -169,8 +171,10 @@ extension Interpreter: ExprVisitor {
     }
     
     func visitGetExpr(_ expr: Expr.Get) throws -> Any? {
-        // TODO: Implement
-        nil
+        guard let object = try evaluate(expr.object) as? LoxInstance else {
+            throw RuntimeError.notInstance(expr.name, "Only instances have properties.")
+        }
+        return try object.get(property: expr.name)
     }
     
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> Any? {

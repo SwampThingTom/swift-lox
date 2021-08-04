@@ -112,7 +112,7 @@ class Resolver: ExprVisitor, StmtVisitor {
     }
     
     func visitGetExpr(_ expr: Expr.Get) throws -> Void {
-        // TODO: Implement
+        try resolve(expr.object)
     }
     
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> Void {
