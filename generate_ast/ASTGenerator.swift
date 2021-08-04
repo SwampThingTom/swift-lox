@@ -29,6 +29,7 @@ class ASTGenerator {
                   baseName: "Stmt",
                   types: [
                     "Block      : [Stmt] statements",
+                    "Class      : Token name, [Stmt.Function] methods",
                     "Expression : Expr expression",
                     "Function   : Token name, [Token] params, [Stmt] body",
                     "If         : Expr condition, Stmt thenBranch, Stmt? elseBranch",
