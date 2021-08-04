@@ -22,6 +22,7 @@ class ASTGenerator {
                     "Grouping : Expr expression",
                     "Literal  : Any? value",
                     "Logical  : Expr left, Token oper, Expr right",
+                    "Set      : Expr object, Token name, Expr value",
                     "Unary    : Token oper, Expr right",
                     "Variable : Token name"
                   ])
