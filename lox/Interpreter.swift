@@ -197,6 +197,11 @@ extension Interpreter: ExprVisitor {
         return try evaluate(expr.right)
     }
     
+    func visitSetExpr(_ expr: Expr.Set) throws -> Any? {
+        // TODO: implement
+        nil
+    }
+    
     func visitUnaryExpr(_ expr: Expr.Unary) throws -> Any? {
         let right = try evaluate(expr.right)
         

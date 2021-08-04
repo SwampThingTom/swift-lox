@@ -9,6 +9,7 @@ protocol ExprVisitor {
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> ExprVisitorReturnType
     func visitLiteralExpr(_ expr: Expr.Literal) throws -> ExprVisitorReturnType
     func visitLogicalExpr(_ expr: Expr.Logical) throws -> ExprVisitorReturnType
+    func visitSetExpr(_ expr: Expr.Set) throws -> ExprVisitorReturnType
     func visitUnaryExpr(_ expr: Expr.Unary) throws -> ExprVisitorReturnType
     func visitVariableExpr(_ expr: Expr.Variable) throws -> ExprVisitorReturnType
 }
@@ -115,6 +116,22 @@ class Expr {
 
         override func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturnType {
             return try visitor.visitLogicalExpr(self)
+        }
+    }
+
+    class Set: Expr {
+        let object: Expr
+        let name: Token
+        let value: Expr
+
+        init(object: Expr, name: Token, value: Expr) {
+            self.object = object
+            self.name = name
+            self.value = value
+        }
+
+        override func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturnType {
+            return try visitor.visitSetExpr(self)
         }
     }
 

@@ -128,6 +128,10 @@ class Resolver: ExprVisitor, StmtVisitor {
         try resolve(expr.right)
     }
     
+    func visitSetExpr(_ expr: Expr.Set) throws -> Void {
+        // TODO: Implement
+    }
+    
     func visitUnaryExpr(_ expr: Expr.Unary) throws -> Void {
         try resolve(expr.right)
     }
