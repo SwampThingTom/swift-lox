@@ -168,6 +168,11 @@ extension Interpreter: ExprVisitor {
         return try function.call(interpreter: self, arguments: arguments)
     }
     
+    func visitGetExpr(_ expr: Expr.Get) throws -> Any? {
+        // TODO: Implement
+        nil
+    }
+    
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> Any? {
         try evaluate(expr.expression)
     }

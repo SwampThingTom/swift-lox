@@ -29,6 +29,10 @@ class ASTPrinter: ExprVisitor {
         try parenthesize(name: "call", expressions: expr)
     }
     
+    func visitGetExpr(_ expr: Expr.Get) throws -> String {
+        try parenthesize(name: "get", expressions: expr)
+    }
+    
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> String {
         try parenthesize(name: "group", expressions: expr.expression)
     }

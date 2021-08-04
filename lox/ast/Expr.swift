@@ -5,6 +5,7 @@ protocol ExprVisitor {
     func visitAssignExpr(_ expr: Expr.Assign) throws -> ExprVisitorReturnType
     func visitBinaryExpr(_ expr: Expr.Binary) throws -> ExprVisitorReturnType
     func visitCallExpr(_ expr: Expr.Call) throws -> ExprVisitorReturnType
+    func visitGetExpr(_ expr: Expr.Get) throws -> ExprVisitorReturnType
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> ExprVisitorReturnType
     func visitLiteralExpr(_ expr: Expr.Literal) throws -> ExprVisitorReturnType
     func visitLogicalExpr(_ expr: Expr.Logical) throws -> ExprVisitorReturnType
@@ -60,6 +61,20 @@ class Expr {
 
         override func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturnType {
             return try visitor.visitCallExpr(self)
+        }
+    }
+
+    class Get: Expr {
+        let object: Expr
+        let name: Token
+
+        init(object: Expr, name: Token) {
+            self.object = object
+            self.name = name
+        }
+
+        override func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturnType {
+            return try visitor.visitGetExpr(self)
         }
     }
 

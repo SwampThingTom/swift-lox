@@ -111,6 +111,10 @@ class Resolver: ExprVisitor, StmtVisitor {
         try expr.arguments.forEach { try resolve($0) }
     }
     
+    func visitGetExpr(_ expr: Expr.Get) throws -> Void {
+        // TODO: Implement
+    }
+    
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> Void {
         try resolve(expr)
     }
