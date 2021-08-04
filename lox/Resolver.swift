@@ -43,6 +43,10 @@ class Resolver: ExprVisitor, StmtVisitor {
         endScope()
     }
     
+    func visitClassStmt(_ stmt: Stmt.Class) throws -> Void {
+        // TODO: Implement
+    }
+    
     func visitExpressionStmt(_ stmt: Stmt.Expression) throws -> Void {
         try resolve(stmt.expression)
     }

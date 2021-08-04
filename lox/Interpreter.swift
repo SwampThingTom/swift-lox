@@ -276,6 +276,10 @@ extension Interpreter: StmtVisitor {
         try execute(block: stmt.statements, environment: Environment(enclosing: environment))
     }
     
+    func visitClassStmt(_ stmt: Stmt.Class) throws -> Void {
+        // TODO: Implement
+    }
+    
     func visitExpressionStmt(_ stmt: Stmt.Expression) throws -> Void {
         _ = try evaluate(stmt.expression)
     }
