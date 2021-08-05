@@ -134,6 +134,10 @@ class Resolver: ExprVisitor, StmtVisitor {
         try resolve(expr.object)
     }
     
+    func visitThisExpr(_ expr: Expr.This) throws -> Void {
+        // TODO: Implement
+    }
+    
     func visitUnaryExpr(_ expr: Expr.Unary) throws -> Void {
         try resolve(expr.right)
     }

@@ -207,6 +207,11 @@ extension Interpreter: ExprVisitor {
         return value
     }
     
+    func visitThisExpr(_ expr: Expr.This) throws -> Any? {
+        // TODO: Implement
+        nil
+    }
+    
     func visitUnaryExpr(_ expr: Expr.Unary) throws -> Any? {
         let right = try evaluate(expr.right)
         
