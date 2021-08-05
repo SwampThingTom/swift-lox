@@ -9,6 +9,10 @@ import Foundation
 
 typealias Scope = Dictionary<String, Bool>
 
+enum ClassType {
+    case none, klass
+}
+
 enum FunctionType {
     case none, function, method
 }
@@ -22,7 +26,8 @@ class Resolver: ExprVisitor, StmtVisitor {
     private let interpreter: Interpreter
     
     private var scopes = [Scope]()
-    private var currentFunction: FunctionType = .none
+    private var currentFunction = FunctionType.none
+    private var currentClass = ClassType.none
     
     init(lox: Lox, interpreter: Interpreter) {
         self.lox = lox
@@ -44,6 +49,9 @@ class Resolver: ExprVisitor, StmtVisitor {
     }
     
     func visitClassStmt(_ stmt: Stmt.Class) throws -> Void {
+        let enclosingClass = currentClass
+        currentClass = .klass
+        
         declare(stmt.name)
         define(stmt.name)
         
@@ -51,6 +59,8 @@ class Resolver: ExprVisitor, StmtVisitor {
         scopes[scopes.count - 1]["this"] = true
         stmt.methods.forEach() { resolve(function: $0, functionType: .method) }
         endScope()
+        
+        currentClass = enclosingClass
     }
     
     func visitExpressionStmt(_ stmt: Stmt.Expression) throws -> Void {
@@ -139,6 +149,10 @@ class Resolver: ExprVisitor, StmtVisitor {
     }
     
     func visitThisExpr(_ expr: Expr.This) throws -> Void {
+        guard currentClass != .none else {
+            lox.error(at: expr.keyword, message: "Can't use 'this' outside of a class.")
+            return
+        }
         resolve(local: expr, token: expr.keyword)
     }
     
