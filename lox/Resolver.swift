@@ -10,7 +10,7 @@ import Foundation
 typealias Scope = Dictionary<String, Bool>
 
 enum FunctionType {
-    case none, function
+    case none, function, method
 }
 
 class Resolver: ExprVisitor, StmtVisitor {
@@ -46,6 +46,7 @@ class Resolver: ExprVisitor, StmtVisitor {
     func visitClassStmt(_ stmt: Stmt.Class) throws -> Void {
         declare(stmt.name)
         define(stmt.name)
+        stmt.methods.forEach() { resolve(function: $0, functionType: .method) }
     }
     
     func visitExpressionStmt(_ stmt: Stmt.Expression) throws -> Void {
@@ -129,7 +130,8 @@ class Resolver: ExprVisitor, StmtVisitor {
     }
     
     func visitSetExpr(_ expr: Expr.Set) throws -> Void {
-        // TODO: Implement
+        try resolve(expr.value)
+        try resolve(expr.object)
     }
     
     func visitUnaryExpr(_ expr: Expr.Unary) throws -> Void {

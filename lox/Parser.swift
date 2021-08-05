@@ -230,6 +230,8 @@ class Parser {
             let value = try assignment()
             if let expr = expr as? Expr.Variable {
                 return Expr.Assign(name: expr.name, value: value)
+            } else if let expr = expr as? Expr.Get {
+                return Expr.Set(object: expr.object, name: expr.name, value: value)
             }
             
             // report but don't throw

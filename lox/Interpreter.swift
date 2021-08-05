@@ -198,8 +198,13 @@ extension Interpreter: ExprVisitor {
     }
     
     func visitSetExpr(_ expr: Expr.Set) throws -> Any? {
-        // TODO: implement
-        nil
+        guard let object = try evaluate(expr.object) as? LoxInstance else {
+            throw RuntimeError.notInstance(expr.name, "Only instances have fields.")
+        }
+        
+        let value = try evaluate(expr.value)
+        object.set(property: expr.name, value: value)
+        return value
     }
     
     func visitUnaryExpr(_ expr: Expr.Unary) throws -> Any? {
@@ -292,7 +297,14 @@ extension Interpreter: StmtVisitor {
     
     func visitClassStmt(_ stmt: Stmt.Class) throws -> Void {
         environment.define(token: stmt.name, value: nil)
-        let klass = LoxClass(name: stmt.name.lexeme)
+        
+        var methods = Dictionary<String, LoxFunction>()
+        for method in stmt.methods {
+            let function = LoxFunction(method, closure: environment)
+            methods[method.name.lexeme] = function
+        }
+        
+        let klass = LoxClass(name: stmt.name.lexeme, methods: methods)
         try environment.assign(token: stmt.name, value: klass)
     }
     

@@ -23,10 +23,19 @@ class LoxInstance: CustomStringConvertible {
     }
     
     func get(property token: Token) throws -> Any? {
-        guard fields.contains(key: token.lexeme) else {
-            throw RuntimeError.undefinedProperty(token, "Undefined property '\(token.lexeme)'.")
+        if fields.contains(key: token.lexeme) {
+            return fields[token.lexeme] as Any?
         }
-        return fields[token.lexeme] as Any?
+        
+        if let method = klass.find(method: token.lexeme) {
+            return method
+        }
+        
+        throw RuntimeError.undefinedProperty(token, "Undefined property '\(token.lexeme)'.")
+    }
+    
+    func set(property token: Token, value: Any?) {
+        fields[token.lexeme] = value
     }
 }
 

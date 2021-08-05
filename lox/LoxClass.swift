@@ -7,10 +7,11 @@
 
 import Foundation
 
-class LoxClass: LoxCallable, CustomStringConvertible {
-        
-    let name: String
+struct LoxClass: LoxCallable, CustomStringConvertible {
     
+    let name: String
+    let methods: Dictionary<String, LoxFunction>
+
     var arity: Int {
         0
     }
@@ -19,11 +20,16 @@ class LoxClass: LoxCallable, CustomStringConvertible {
         name
     }
     
-    init(name: String) {
+    init(name: String, methods: Dictionary<String, LoxFunction>) {
         self.name = name
+        self.methods = methods
+    }
+    
+    func find(method: String) -> LoxFunction? {
+        methods[method]
     }
     
     func call(interpreter: Interpreter, arguments: [Any?]) throws -> Any? {
-        return LoxInstance(self)
+        LoxInstance(self)
     }
 }
