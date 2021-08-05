@@ -25,6 +25,12 @@ class LoxFunction: LoxCallable {
         self.closure = closure
     }
     
+    func bind(_ instance: LoxInstance) -> LoxFunction {
+        let environment = Environment(enclosing: closure)
+        environment.define(name: "this", value: instance)
+        return LoxFunction(declaration, closure: environment)
+    }
+    
     func call(interpreter: Interpreter, arguments: [Any?]) throws -> Any? {
         let environment = Environment(enclosing: closure)
         for index in 0 ..< declaration.params.count {

@@ -46,7 +46,11 @@ class Resolver: ExprVisitor, StmtVisitor {
     func visitClassStmt(_ stmt: Stmt.Class) throws -> Void {
         declare(stmt.name)
         define(stmt.name)
+        
+        beginScope()
+        scopes[scopes.count - 1]["this"] = true
         stmt.methods.forEach() { resolve(function: $0, functionType: .method) }
+        endScope()
     }
     
     func visitExpressionStmt(_ stmt: Stmt.Expression) throws -> Void {
@@ -135,7 +139,7 @@ class Resolver: ExprVisitor, StmtVisitor {
     }
     
     func visitThisExpr(_ expr: Expr.This) throws -> Void {
-        // TODO: Implement
+        resolve(local: expr, token: expr.keyword)
     }
     
     func visitUnaryExpr(_ expr: Expr.Unary) throws -> Void {

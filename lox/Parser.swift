@@ -323,6 +323,9 @@ class Parser {
         if match(any: [.number, .string]) {
             return Expr.Literal(value: previous.literal)
         }
+        if match(tokenType: .keywordThis) {
+            return Expr.This(keyword: previous)
+        }
         if match(tokenType: .identifier) {
             return Expr.Variable(name: previous)
         }

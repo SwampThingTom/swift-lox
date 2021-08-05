@@ -28,7 +28,7 @@ class LoxInstance: CustomStringConvertible {
         }
         
         if let method = klass.find(method: token.lexeme) {
-            return method
+            return method.bind(self)
         }
         
         throw RuntimeError.undefinedProperty(token, "Undefined property '\(token.lexeme)'.")

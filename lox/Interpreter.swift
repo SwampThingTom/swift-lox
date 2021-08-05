@@ -208,8 +208,7 @@ extension Interpreter: ExprVisitor {
     }
     
     func visitThisExpr(_ expr: Expr.This) throws -> Any? {
-        // TODO: Implement
-        nil
+        return try lookupVariable(named: expr.keyword, expr: expr)
     }
     
     func visitUnaryExpr(_ expr: Expr.Unary) throws -> Any? {
