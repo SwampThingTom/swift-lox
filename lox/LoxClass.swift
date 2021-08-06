@@ -7,9 +7,10 @@
 
 import Foundation
 
-struct LoxClass: LoxCallable, CustomStringConvertible {
+class LoxClass: LoxCallable, CustomStringConvertible {
     
     let name: String
+    let superclass: LoxClass?
     let methods: Dictionary<String, LoxFunction>
 
     var arity: Int {
@@ -24,13 +25,20 @@ struct LoxClass: LoxCallable, CustomStringConvertible {
         find(method: "init")
     }
     
-    init(name: String, methods: Dictionary<String, LoxFunction>) {
+    init(name: String, superclass: LoxClass?,  methods: Dictionary<String, LoxFunction>) {
         self.name = name
+        self.superclass = superclass
         self.methods = methods
     }
     
     func find(method: String) -> LoxFunction? {
-        methods[method]
+        if let method = methods[method] {
+            return method
+        }
+        if let superclass = superclass {
+            return superclass.find(method: method)
+        }
+        return nil
     }
     
     func call(interpreter: Interpreter, arguments: [Any?]) throws -> Any? {

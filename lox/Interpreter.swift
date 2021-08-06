@@ -10,6 +10,7 @@ import Foundation
 enum RuntimeError: Error {
     case functionArgumentMismatch(Token, String)
     case notCallable(Token, String)
+    case notClass(Token, String)
     case notInstance(Token, String)
     case typeMismatch(Token, String)
     case undefinedProperty(Token, String)
@@ -300,6 +301,8 @@ extension Interpreter: StmtVisitor {
     }
     
     func visitClassStmt(_ stmt: Stmt.Class) throws -> Void {
+        let superclass = try superclass(stmt)
+        
         environment.define(token: stmt.name, value: nil)
         
         var methods = Dictionary<String, LoxFunction>()
@@ -309,8 +312,18 @@ extension Interpreter: StmtVisitor {
             methods[method.name.lexeme] = function
         }
         
-        let klass = LoxClass(name: stmt.name.lexeme, methods: methods)
+        let klass = LoxClass(name: stmt.name.lexeme, superclass: superclass, methods: methods)
         try environment.assign(token: stmt.name, value: klass)
+    }
+    
+    func superclass(_ stmt: Stmt.Class) throws -> LoxClass? {
+        guard let statementSuperclass = stmt.superclass else {
+            return nil
+        }
+        guard let superclass = try evaluate(statementSuperclass) as? LoxClass else {
+            throw RuntimeError.notClass(statementSuperclass.name, "Superclass must be a class.")
+        }
+        return superclass
     }
     
     func visitExpressionStmt(_ stmt: Stmt.Expression) throws -> Void {

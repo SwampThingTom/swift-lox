@@ -94,6 +94,7 @@ class Lox: ErrorReporting {
         switch runtimeError {
         case .functionArgumentMismatch(let token, let message): fallthrough
         case .notCallable(let token, let message): fallthrough
+        case .notClass(let token, let message): fallthrough
         case .notInstance(let token, let message): fallthrough
         case .typeMismatch(let token, let message): fallthrough
         case .undefinedProperty(let token, let message): fallthrough

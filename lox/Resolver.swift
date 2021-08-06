@@ -55,6 +55,13 @@ class Resolver: ExprVisitor, StmtVisitor {
         declare(stmt.name)
         define(stmt.name)
         
+        if let superclass = stmt.superclass {
+            if stmt.name.lexeme == superclass.name.lexeme {
+                lox.error(at: superclass.name, message: "A class can't inherit from itself.")
+            }
+            try resolve(superclass)
+        }
+        
         beginScope()
         scopes[scopes.count - 1]["this"] = true
         stmt.methods.forEach() {
