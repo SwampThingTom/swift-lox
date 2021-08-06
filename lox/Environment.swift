@@ -50,7 +50,11 @@ class Environment {
     }
     
     func get(at distance: Int, token: Token) throws -> Any? {
-        try ancestor(at: distance).values[token.lexeme] as Any?
+        try get(at: distance, name: token.lexeme)
+    }
+    
+    func get(at distance: Int, name: String) throws -> Any? {
+        try ancestor(at: distance).values[name] as Any?
     }
     
     private func ancestor(at distance: Int) throws -> Environment {

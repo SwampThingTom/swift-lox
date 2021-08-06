@@ -13,11 +13,15 @@ struct LoxClass: LoxCallable, CustomStringConvertible {
     let methods: Dictionary<String, LoxFunction>
 
     var arity: Int {
-        0
+        initializer?.arity ?? 0
     }
 
     var description: String {
         name
+    }
+    
+    private var initializer: LoxFunction? {
+        find(method: "init")
     }
     
     init(name: String, methods: Dictionary<String, LoxFunction>) {
@@ -30,6 +34,10 @@ struct LoxClass: LoxCallable, CustomStringConvertible {
     }
     
     func call(interpreter: Interpreter, arguments: [Any?]) throws -> Any? {
-        LoxInstance(self)
+        let instance = LoxInstance(self)
+        if let initializer = initializer {
+            _ = try initializer.bind(instance).call(interpreter: interpreter, arguments: arguments)
+        }
+        return instance
     }
 }

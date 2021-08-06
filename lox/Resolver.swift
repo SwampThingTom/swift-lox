@@ -14,7 +14,7 @@ enum ClassType {
 }
 
 enum FunctionType {
-    case none, function, method
+    case none, function, initializer, method
 }
 
 class Resolver: ExprVisitor, StmtVisitor {
@@ -57,7 +57,10 @@ class Resolver: ExprVisitor, StmtVisitor {
         
         beginScope()
         scopes[scopes.count - 1]["this"] = true
-        stmt.methods.forEach() { resolve(function: $0, functionType: .method) }
+        stmt.methods.forEach() {
+            let functionType: FunctionType = $0.name.lexeme == "init" ? .initializer : .method
+            resolve(function: $0, functionType: functionType)
+        }
         endScope()
         
         currentClass = enclosingClass
@@ -92,6 +95,9 @@ class Resolver: ExprVisitor, StmtVisitor {
         }
         
         if let stmtValue = stmt.value {
+            if currentFunction == .initializer {
+                lox.error(at: stmt.keyword, message: "Can't return a value from an initializer.")
+            }
             try resolve(stmtValue)
         }
     }

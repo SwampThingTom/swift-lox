@@ -11,6 +11,7 @@ class LoxFunction: LoxCallable {
     
     private let declaration: Stmt.Function
     private let closure: Environment
+    private let isInitializer: Bool
     
     var arity: Int {
         declaration.params.count
@@ -20,15 +21,16 @@ class LoxFunction: LoxCallable {
         "<fn \(declaration.name.lexeme)>"
     }
     
-    init(_ declaration: Stmt.Function, closure: Environment) {
+    init(_ declaration: Stmt.Function, closure: Environment, isInitializer: Bool = false) {
         self.declaration = declaration
         self.closure = closure
+        self.isInitializer = isInitializer
     }
     
     func bind(_ instance: LoxInstance) -> LoxFunction {
         let environment = Environment(enclosing: closure)
         environment.define(name: "this", value: instance)
-        return LoxFunction(declaration, closure: environment)
+        return LoxFunction(declaration, closure: environment, isInitializer: isInitializer)
     }
     
     func call(interpreter: Interpreter, arguments: [Any?]) throws -> Any? {
@@ -37,11 +39,13 @@ class LoxFunction: LoxCallable {
             environment.define(token: declaration.params[index], value: arguments[index])
         }
         
+        var returnValue: Any? = nil
         do {
             try interpreter.execute(block: declaration.body, environment: environment)
         } catch ControlFlow.functionReturn(let value) {
-            return value
+            returnValue = value
         }
-        return nil
+        
+        return isInitializer ? try closure.get(at: 0, name: "this") : returnValue
     }
 }

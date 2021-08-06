@@ -304,7 +304,8 @@ extension Interpreter: StmtVisitor {
         
         var methods = Dictionary<String, LoxFunction>()
         for method in stmt.methods {
-            let function = LoxFunction(method, closure: environment)
+            let isInitializer = method.name.lexeme == "init"
+            let function = LoxFunction(method, closure: environment, isInitializer: isInitializer)
             methods[method.name.lexeme] = function
         }
         
