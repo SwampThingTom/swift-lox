@@ -215,7 +215,7 @@ class Resolver: ExprVisitor, StmtVisitor {
     }
     
     private func resolve(local expr: Expr, token: Token) {
-        for index in 0 ..< scopes.count {
+        for index in stride(from: scopes.count - 1, through: 0, by: -1) {
             if scopes[index].contains(key: token.lexeme) {
                 interpreter.resolve(expr, depth: scopes.count - index - 1)
                 return
