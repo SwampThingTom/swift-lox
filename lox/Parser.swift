@@ -73,7 +73,7 @@ class Parser {
         
         try consume(tokenType: .rightBrace, errorIfMissing: "Expect '}' after class body.")
         
-        return Stmt.Class(name: name, methods: methods)
+        return Stmt.Class(name: name, superclass: nil, methods: methods)
     }
     
     private func varDeclaration() throws -> Stmt {
