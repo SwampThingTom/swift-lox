@@ -109,6 +109,10 @@ class Resolver: ExprVisitor, StmtVisitor {
         }
     }
     
+    func visitSuperExpr(_ expr: Expr.Super) throws -> Void {
+        // TODO: implement
+    }
+    
     func visitVarStmt(_ stmt: Stmt.Var) throws -> Void {
         declare(stmt.name)
         if let initializer = stmt.initializer {

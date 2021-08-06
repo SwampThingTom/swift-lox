@@ -50,6 +50,11 @@ class ASTPrinter: ExprVisitor {
         try parenthesize(name: "set", expressions: expr)
     }
     
+    func visitSuperExpr(_ expr: Expr.Super) throws -> String {
+        // TODO: implement
+        "super"
+    }
+    
     func visitThisExpr(_ expr: Expr.This) throws -> String {
         "this"
     }
