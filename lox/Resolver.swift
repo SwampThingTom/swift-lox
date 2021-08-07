@@ -162,7 +162,7 @@ class Resolver: ExprVisitor, StmtVisitor {
     }
     
     func visitGroupingExpr(_ expr: Expr.Grouping) throws -> Void {
-        try resolve(expr)
+        try resolve(expr.expression)
     }
     
     func visitLiteralExpr(_ expr: Expr.Literal) throws -> Void {
