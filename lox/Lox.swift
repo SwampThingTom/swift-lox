@@ -7,8 +7,13 @@
 
 import Foundation
 
+let EXIT_ERROR_USAGE: Int32 = 64
+let EXIT_ERROR_PARSE: Int32 = 65
+let EXIT_ERROR_RUNTIME: Int32 = 70
+
 protocol ErrorReporting {
     var hadError: Bool { get }
+    var hadRuntimeError: Bool { get }
     func error(line: Int, message: String)
     func error(at token: Token, message: String)
     func error(runtimeError: RuntimeError)
@@ -20,6 +25,7 @@ class Lox: ErrorReporting {
     
     private let io: LoxIO
     var hadError = false
+    var hadRuntimeError = false
     
     private let interpreter: Interpreter
     
@@ -34,7 +40,10 @@ class Lox: ErrorReporting {
             let contents = try String(contentsOfFile: script)
             run(contents)
             if hadError {
-                exit(EXIT_FAILURE)
+                exit(EXIT_ERROR_PARSE)
+            }
+            if hadRuntimeError {
+                exit(EXIT_ERROR_RUNTIME)
             }
         } catch {
             io.printErrorLine("Unable to read file \"\(script)\": \(error.localizedDescription)")
@@ -103,6 +112,6 @@ class Lox: ErrorReporting {
         case .unexpected(let message):
             io.printErrorLine(message)
         }
-        hadError = true
+        hadRuntimeError = true
     }
 }

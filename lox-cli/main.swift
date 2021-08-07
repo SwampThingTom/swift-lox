@@ -12,7 +12,7 @@ let console = ConsoleIO()
 guard CommandLine.argc <= 2 else {
     let executableName = (CommandLine.arguments[0] as NSString).lastPathComponent
     console.printErrorLine("Usage: \(executableName) [script]")
-    exit(EXIT_FAILURE)
+    exit(EXIT_ERROR_USAGE)
 }
 
 let lox = Lox(io: console)
