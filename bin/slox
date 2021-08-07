@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+script_dir=$(dirname "$0")
+exe_dir="$script_dir/../build/Debug"
+${exe_dir}/lox $@
