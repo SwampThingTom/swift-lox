@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Installs project dependencies
+
+script_dir=$(dirname "$0")
+tool_dir="${script_dir}/../tool"
+ 
+cd $tool_dir
+dart pub get

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+script_dir=$(dirname "$0")
+repo_dir="${script_dir}/.."
+ 
+cd $repo_dir
+dart tool/bin/test.dart jlox --interpreter bin/slox
