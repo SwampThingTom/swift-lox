@@ -95,6 +95,15 @@ class Interpreter {
             // print integral values as integers
             return text.hasSuffix(".0") ? String(text.dropLast(2)) : text
         }
+        if let stringValue = value as? String {
+            return stringValue
+        }
+        if let loxClassValue = value as? LoxClass {
+            return loxClassValue.description
+        }
+        if let loxInstanceValue = value as? LoxInstance {
+            return loxInstanceValue.description
+        }
         return String(describing: value)
     }
 }
