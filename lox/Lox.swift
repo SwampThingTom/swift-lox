@@ -86,7 +86,7 @@ class Lox: ErrorReporting {
         if token.tokenType == .eof {
             reportParserError(at: token.line, lexeme: " at end", message: message)
         } else {
-            reportParserError(at: token.line, lexeme: " at \(token.lexeme)", message: message)
+            reportParserError(at: token.line, lexeme: " at '\(token.lexeme)'", message: message)
         }
     }
 

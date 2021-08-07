@@ -88,7 +88,7 @@ class Scanner {
             } else if c.isAlpha {
                 addIdentifierToken()
             } else {
-                errorReporter.error(line: line, message: "Unexpected character '\(c)'.")
+                errorReporter.error(line: line, message: "Unexpected character.")
             }
         }
     }

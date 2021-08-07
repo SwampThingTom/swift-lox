@@ -170,7 +170,7 @@ class Parser {
     
     private func printStatement() throws -> Stmt {
         let value = try expression()
-        try consume(tokenType: .semicolon, errorIfMissing: "Expect ; after value.")
+        try consume(tokenType: .semicolon, errorIfMissing: "Expect ';' after value.")
         return Stmt.Print(expression: value)
     }
     
@@ -191,7 +191,7 @@ class Parser {
     
     private func expressionStatement() throws -> Stmt {
         let value = try expression()
-        try consume(tokenType: .semicolon, errorIfMissing: "Expect ; after expression.")
+        try consume(tokenType: .semicolon, errorIfMissing: "Expect ';' after expression.")
         return Stmt.Expression(expression: value)
     }
     
@@ -205,7 +205,7 @@ class Parser {
                 let param = try consume(tokenType: .identifier, errorIfMissing: "Expect parameter name.")
                 if parameters.count == 255 {
                     // report error but do not throw
-                    _ = error(at: peek, message: "Can't have more than 255 parameters.")
+                    _ = error(at: param, message: "Can't have more than 255 parameters.")
                     continue
                 }
                 parameters.append(param)
@@ -309,7 +309,7 @@ class Parser {
                 let arg = try expression()
                 if arguments.count == 255 {
                     // report error but don't throw
-                    _ = error(at: peek, message: "Can't have more than 255 arguments.")
+                    _ = error(at: previous, message: "Can't have more than 255 arguments.")
                     continue
                 }
                 arguments.append(arg)
