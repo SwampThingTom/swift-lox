@@ -7,7 +7,7 @@
 
 import Foundation
 
-let console = ConsoleIO()
+fileprivate let console = ConsoleIO()
 
 guard CommandLine.argc <= 2 else {
     let executableName = (CommandLine.arguments[0] as NSString).lastPathComponent
@@ -15,7 +15,7 @@ guard CommandLine.argc <= 2 else {
     exit(EXIT_ERROR_USAGE)
 }
 
-let lox = Lox(io: console)
+fileprivate let lox = Lox(io: console)
 if CommandLine.argc == 2 {
     lox.runScript(CommandLine.arguments[1])
 } else {

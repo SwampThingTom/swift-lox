@@ -41,7 +41,7 @@ class Resolver {
             // errors have already been reported
         }
     }
-        
+    
     private func resolve(_ stmt: Stmt) throws {
         try stmt.accept(visitor: self)
     }
@@ -63,7 +63,7 @@ class Resolver {
         resolve(function.body)
         endScope()
     }
-        
+    
     private func resolve(local expr: Expr, token: Token) {
         for index in stride(from: scopes.count - 1, through: 0, by: -1) {
             if scopes[index].contains(key: token.lexeme) {
@@ -84,7 +84,7 @@ class Resolver {
     private func declare(_ token: Token) {
         guard !scopes.isEmpty else { return }
         if scopes[scopes.count - 1].contains(key: token.lexeme) {
-            lox.error(at: token, message: "Already a variable with this name in this scope.")
+            errorReporter.error(at: token, message: "Already a variable with this name in this scope.")
         }
         scopes[scopes.count - 1][token.lexeme] = false
     }
@@ -138,16 +138,16 @@ extension Resolver: ExprVisitor {
     
     func visitSuperExpr(_ expr: Expr.Super) throws -> Void {
         if currentClass == .none {
-            lox.error(at: expr.keyword, message: "Can't use 'super' outside of a class.")
+            errorReporter.error(at: expr.keyword, message: "Can't use 'super' outside of a class.")
         } else if currentClass != .subklass {
-            lox.error(at: expr.keyword, message: "Can't use 'super' in a class with no superclass.")
+            errorReporter.error(at: expr.keyword, message: "Can't use 'super' in a class with no superclass.")
         }
         resolve(local: expr, token: expr.keyword)
     }
     
     func visitThisExpr(_ expr: Expr.This) throws -> Void {
         guard currentClass != .none else {
-            lox.error(at: expr.keyword, message: "Can't use 'this' outside of a class.")
+            errorReporter.error(at: expr.keyword, message: "Can't use 'this' outside of a class.")
             return
         }
         resolve(local: expr, token: expr.keyword)
@@ -159,7 +159,7 @@ extension Resolver: ExprVisitor {
     
     func visitVariableExpr(_ expr: Expr.Variable) throws -> Void {
         if let scope = scopes.last, let defined = scope[expr.name.lexeme], !defined {
-            lox.error(at: expr.name, message: "Can't read local variable in its own initializer.")
+            errorReporter.error(at: expr.name, message: "Can't read local variable in its own initializer.")
             return
         }
         resolve(local: expr, token: expr.name)
@@ -183,7 +183,7 @@ extension Resolver: StmtVisitor {
         
         if let superclass = stmt.superclass {
             if stmt.name.lexeme == superclass.name.lexeme {
-                lox.error(at: superclass.name, message: "A class can't inherit from itself.")
+                errorReporter.error(at: superclass.name, message: "A class can't inherit from itself.")
             }
             currentClass = .subklass
             try resolve(superclass)
@@ -231,13 +231,13 @@ extension Resolver: StmtVisitor {
     
     func visitReturnStmt(_ stmt: Stmt.Return) throws -> Void {
         guard currentFunction != .none else {
-            lox.error(at: stmt.keyword, message: "Can't return from top-level code.")
+            errorReporter.error(at: stmt.keyword, message: "Can't return from top-level code.")
             return
         }
         
         if let stmtValue = stmt.value {
             if currentFunction == .initializer {
-                lox.error(at: stmt.keyword, message: "Can't return a value from an initializer.")
+                errorReporter.error(at: stmt.keyword, message: "Can't return a value from an initializer.")
             }
             try resolve(stmtValue)
         }
