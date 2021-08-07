@@ -307,6 +307,9 @@ extension Interpreter: ExprVisitor {
         if let left = left as? String, let right = right as? String {
             return left == right
         }
+        if let left = left as? Bool, let right = right as? Bool {
+            return left == right
+        }
         return false
     }
     
