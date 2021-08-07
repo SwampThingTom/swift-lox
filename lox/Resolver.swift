@@ -10,7 +10,7 @@ import Foundation
 typealias Scope = Dictionary<String, Bool>
 
 enum ClassType {
-    case none, klass
+    case none, klass, subklass
 }
 
 enum FunctionType {
@@ -60,6 +60,7 @@ class Resolver: ExprVisitor, StmtVisitor {
             if stmt.name.lexeme == superclass.name.lexeme {
                 lox.error(at: superclass.name, message: "A class can't inherit from itself.")
             }
+            currentClass = .subklass
             try resolve(superclass)
             
             beginScope()
@@ -118,6 +119,11 @@ class Resolver: ExprVisitor, StmtVisitor {
     }
     
     func visitSuperExpr(_ expr: Expr.Super) throws -> Void {
+        if currentClass == .none {
+            lox.error(at: expr.keyword, message: "Can't use 'super' outside of a class.")
+        } else if currentClass != .subklass {
+            lox.error(at: expr.keyword, message: "Can't use 'super' in a class with no superclass.")
+        }
         resolve(local: expr, token: expr.keyword)
     }
     
