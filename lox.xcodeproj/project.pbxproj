@@ -75,6 +75,7 @@
 		E25CFD8426B8BBAC0053DD08 /* Resolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resolver.swift; sourceTree = "<group>"; };
 		E25CFD8626BA32730053DD08 /* LoxClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoxClass.swift; sourceTree = "<group>"; };
 		E25CFD8826BA34200053DD08 /* LoxInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoxInstance.swift; sourceTree = "<group>"; };
+		E27AAAED26BECFB00009FB93 /* SharedConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedConfig.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +102,7 @@
 				E25CFD5A26B5A0950053DD08 /* lox-cli */,
 				E25CFD0426B41E9A0053DD08 /* lox */,
 				E25CFD6526B5AD6F0053DD08 /* generate_ast */,
+				E27AAAEC26BECFB00009FB93 /* config */,
 				E25CFD0326B41E9A0053DD08 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -162,6 +164,14 @@
 				E25CFD7A26B7062F0053DD08 /* Stmt.swift */,
 			);
 			path = ast;
+			sourceTree = "<group>";
+		};
+		E27AAAEC26BECFB00009FB93 /* config */ = {
+			isa = PBXGroup;
+			children = (
+				E27AAAED26BECFB00009FB93 /* SharedConfig.xcconfig */,
+			);
+			path = config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -278,6 +288,7 @@
 /* Begin XCBuildConfiguration section */
 		E25CFD0726B41E9A0053DD08 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E27AAAED26BECFB00009FB93 /* SharedConfig.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -339,6 +350,7 @@
 		};
 		E25CFD0826B41E9A0053DD08 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E27AAAED26BECFB00009FB93 /* SharedConfig.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;

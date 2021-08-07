@@ -1,3 +1,9 @@
+# Local build directory
+build/
+
+# Scratchpad Lox file
+temp.lox
+
 # Xcode
 
 ## User settings
