@@ -9,7 +9,7 @@ import Foundation
 
 class Environment {
     
-    private let enclosing: Environment?
+    let enclosing: Environment?
     private var values = Dictionary<String, Any?>()
     
     init(enclosing: Environment? = nil) {
@@ -60,7 +60,7 @@ class Environment {
     private func ancestor(at distance: Int) throws -> Environment {
         var environment = self
         for _ in 0 ..< distance {
-            guard let enclosing = enclosing else {
+            guard let enclosing = environment.enclosing else {
                 throw RuntimeError.unexpected("Unable to find scope for variable.")
             }
             environment = enclosing

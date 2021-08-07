@@ -39,6 +39,7 @@ class Resolver: ExprVisitor, StmtVisitor {
             try statements.forEach() { try resolve($0) }
         } catch {
             // errors have already been reported
+            print("\(error)")
         }
     }
     
@@ -60,6 +61,9 @@ class Resolver: ExprVisitor, StmtVisitor {
                 lox.error(at: superclass.name, message: "A class can't inherit from itself.")
             }
             try resolve(superclass)
+            
+            beginScope()
+            scopes[scopes.count - 1]["super"] = true
         }
         
         beginScope()
@@ -69,6 +73,10 @@ class Resolver: ExprVisitor, StmtVisitor {
             resolve(function: $0, functionType: functionType)
         }
         endScope()
+        
+        if stmt.superclass != nil {
+            endScope()
+        }
         
         currentClass = enclosingClass
     }
@@ -110,7 +118,7 @@ class Resolver: ExprVisitor, StmtVisitor {
     }
     
     func visitSuperExpr(_ expr: Expr.Super) throws -> Void {
-        // TODO: implement
+        resolve(local: expr, token: expr.keyword)
     }
     
     func visitVarStmt(_ stmt: Stmt.Var) throws -> Void {

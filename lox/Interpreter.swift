@@ -209,8 +209,19 @@ extension Interpreter: ExprVisitor {
     }
     
     func visitSuperExpr(_ expr: Expr.Super) throws -> Any? {
-        // TODO: implement
-        nil
+        guard let distance = locals[expr] else {
+            throw RuntimeError.unexpected("Can't find 'super' in locals.")
+        }
+        guard let superclass = try environment.get(at: distance, name: "super") as? LoxClass else {
+            throw RuntimeError.unexpected("Expected 'super' to be a class.")
+        }
+        guard let object = try environment.get(at: distance - 1, name: "this") as? LoxInstance else {
+            throw RuntimeError.unexpected("Can't find 'this' in locals.")
+        }
+        guard let method = superclass.find(method: expr.method.lexeme) else {
+            throw RuntimeError.undefinedProperty(expr.method, "Undefined property '\(expr.method.lexeme)'.")
+        }
+        return method.bind(object)
     }
     
     func visitThisExpr(_ expr: Expr.This) throws -> Any? {
@@ -310,6 +321,11 @@ extension Interpreter: StmtVisitor {
         
         environment.define(token: stmt.name, value: nil)
         
+        if let superclass = superclass {
+            environment = Environment(enclosing: self.environment)
+            environment.define(name: "super", value: superclass)
+        }
+        
         var methods = Dictionary<String, LoxFunction>()
         for method in stmt.methods {
             let isInitializer = method.name.lexeme == "init"
@@ -318,6 +334,14 @@ extension Interpreter: StmtVisitor {
         }
         
         let klass = LoxClass(name: stmt.name.lexeme, superclass: superclass, methods: methods)
+        
+        if superclass != nil {
+            guard let enclosingEnvironment = environment.enclosing else {
+                throw RuntimeError.unexpected("No enclosing environment for superclass")
+            }
+            environment = enclosingEnvironment
+        }
+        
         try environment.assign(token: stmt.name, value: klass)
     }
     

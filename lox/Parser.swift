@@ -332,6 +332,12 @@ class Parser {
         if match(any: [.number, .string]) {
             return Expr.Literal(value: previous.literal)
         }
+        if match(tokenType: .keywordSuper) {
+            let keyword = previous
+            try consume(tokenType: .dot, errorIfMissing: "Expect '.' after 'super'.")
+            let method = try consume(tokenType: .identifier, errorIfMissing: "Expect superclass method name.")
+            return Expr.Super(keyword: keyword, method: method)
+        }
         if match(tokenType: .keywordThis) {
             return Expr.This(keyword: previous)
         }
