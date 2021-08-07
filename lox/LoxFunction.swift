@@ -49,3 +49,9 @@ class LoxFunction: LoxCallable {
         return isInitializer ? try closure.get(at: 0, name: "this") : returnValue
     }
 }
+
+extension LoxFunction: Equatable {
+    static func == (lhs: LoxFunction, rhs: LoxFunction) -> Bool {
+        ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
+}

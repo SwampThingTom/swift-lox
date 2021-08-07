@@ -310,6 +310,15 @@ extension Interpreter: ExprVisitor {
         if let left = left as? Bool, let right = right as? Bool {
             return left == right
         }
+        if let left = left as? LoxClass, let right = right as? LoxClass {
+            return left == right
+        }
+        if let left = left as? LoxInstance, let right = right as? LoxInstance {
+            return left == right
+        }
+        if let left = left as? LoxFunction, let right = right as? LoxFunction {
+            return left == right
+        }
         return false
     }
     

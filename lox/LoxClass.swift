@@ -49,3 +49,9 @@ class LoxClass: LoxCallable, CustomStringConvertible {
         return instance
     }
 }
+
+extension LoxClass: Equatable {
+    static func == (lhs: LoxClass, rhs: LoxClass) -> Bool {
+        lhs.name == rhs.name
+    }
+}

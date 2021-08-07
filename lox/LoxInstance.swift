@@ -39,6 +39,12 @@ class LoxInstance: CustomStringConvertible {
     }
 }
 
+extension LoxInstance: Equatable {
+    static func == (lhs: LoxInstance, rhs: LoxInstance) -> Bool {
+        ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
+}
+
 extension Fields {
     func contains(key: String) -> Bool {
         self.contains(where: { $0.key == key })
