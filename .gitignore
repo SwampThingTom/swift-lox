@@ -4,6 +4,10 @@ build/
 # Scratchpad Lox file
 temp.lox
 
+# Dart
+/tool/.dart_tool/
+/tool/.packages
+
 # Xcode
 
 ## User settings
