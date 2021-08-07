@@ -15,7 +15,7 @@ class Parser {
     
     private let errorReporter: ErrorReporting
     private let tokens: [Token]
-    private var current: Int = 0
+    private var current = 0
     
     private var isAtEnd: Bool {
         peek.tokenType == .eof
@@ -258,10 +258,6 @@ class Parser {
         try parseLogicalExpr(parseOperand: equality, operations: .keywordAnd)
     }
     
-    private func expression() throws -> Expr {
-        try assignment()
-    }
-    
     private func equality() throws -> Expr {
         try parseBinaryExpr(parseOperand: comparison, operations: .bangEqual, .equalEqual)
     }
@@ -319,6 +315,26 @@ class Parser {
         return Expr.Call(callee: callee, paren: paren, arguments: arguments)
     }
     
+    private func parseBinaryExpr(parseOperand: () throws -> Expr, operations: TokenType...) throws -> Expr {
+        var expr = try parseOperand()
+        while match(any: operations) {
+            let oper = previous
+            let right = try parseOperand()
+            expr = Expr.Binary(left: expr, oper: oper, right: right)
+        }
+        return expr
+    }
+    
+    private func parseLogicalExpr(parseOperand: () throws -> Expr, operations: TokenType...) throws -> Expr {
+        var expr = try parseOperand()
+        while match(any: operations) {
+            let oper = previous
+            let right = try parseOperand()
+            expr = Expr.Logical(left: expr, oper: oper, right: right)
+        }
+        return expr
+    }
+    
     private func primary() throws -> Expr {
         if match(tokenType: .keywordFalse) {
             return Expr.Literal(value: false)
@@ -352,6 +368,22 @@ class Parser {
         throw error(at: peek, message: "Expect expression.");
     }
     
+    private func expression() throws -> Expr {
+        try assignment()
+    }
+    
+    private func match(tokenType: TokenType) -> Bool {
+        match(any: [tokenType])
+    }
+    
+    private func match(any matchingTypes: [TokenType]) -> Bool {
+        if matchingTypes.contains(where: { check(tokenType: $0) }) {
+            advance()
+            return true
+        }
+        return false
+    }
+    
     @discardableResult
     private func consume(tokenType: TokenType, errorIfMissing errorMessage: String) throws -> Token {
         if check(tokenType: tokenType) {
@@ -360,9 +392,9 @@ class Parser {
         throw error(at: peek, message: errorMessage)
     }
     
-    private func error(at token: Token, message: String) -> ParseError {
-        errorReporter.error(at: token, message: message)
-        return ParseError.unexpectedToken
+    private func check(tokenType: TokenType) -> Bool {
+        guard !isAtEnd else { return false }
+        return peek.tokenType == tokenType
     }
     
     private func synchronize() {
@@ -389,48 +421,16 @@ class Parser {
         }
     }
     
-    private func parseBinaryExpr(parseOperand: () throws -> Expr, operations: TokenType...) throws -> Expr {
-        var expr = try parseOperand()
-        while match(any: operations) {
-            let oper = previous
-            let right = try parseOperand()
-            expr = Expr.Binary(left: expr, oper: oper, right: right)
-        }
-        return expr
-    }
-    
-    private func parseLogicalExpr(parseOperand: () throws -> Expr, operations: TokenType...) throws -> Expr {
-        var expr = try parseOperand()
-        while match(any: operations) {
-            let oper = previous
-            let right = try parseOperand()
-            expr = Expr.Logical(left: expr, oper: oper, right: right)
-        }
-        return expr
-    }
-    
-    private func match(tokenType: TokenType) -> Bool {
-        match(any: [tokenType])
-    }
-    
-    private func match(any matchingTypes: [TokenType]) -> Bool {
-        if matchingTypes.contains(where: { check(tokenType: $0) }) {
-            advance()
-            return true
-        }
-        return false
-    }
-    
-    private func check(tokenType: TokenType) -> Bool {
-        guard !isAtEnd else { return false }
-        return peek.tokenType == tokenType
-    }
-    
     @discardableResult
     private func advance() -> Token {
         if !isAtEnd {
             current += 1
         }
         return previous
+    }
+    
+    private func error(at token: Token, message: String) -> ParseError {
+        errorReporter.error(at: token, message: message)
+        return ParseError.unexpectedToken
     }
 }

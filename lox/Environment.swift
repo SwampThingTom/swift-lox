@@ -7,21 +7,17 @@
 
 import Foundation
 
-class Environment {
+class Environment: CustomStringConvertible {
     
     let enclosing: Environment?
     private var values = Dictionary<String, Any?>()
     
+    var description: String {
+        "\(values) -> \(String(describing: enclosing))"
+    }
+    
     init(enclosing: Environment? = nil) {
         self.enclosing = enclosing
-    }
-    
-    func define(name: String, value: Any?) {
-        values[name] = value
-    }
-    
-    func define(token: Token, value: Any?) {
-        define(name: token.lexeme, value: value)
     }
     
     func assign(token: Token, value: Any?) throws {
@@ -37,6 +33,14 @@ class Environment {
     
     func assign(at distance: Int, token: Token, value: Any?) throws {
         try ancestor(at: distance).values[token.lexeme] = value
+    }
+    
+    func define(token: Token, value: Any?) {
+        define(name: token.lexeme, value: value)
+    }
+    
+    func define(name: String, value: Any?) {
+        values[name] = value
     }
     
     func get(token: Token) throws -> Any? {

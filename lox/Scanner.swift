@@ -93,38 +93,27 @@ class Scanner {
         }
     }
     
-    @discardableResult
-    private func advance() -> Character {
-        let c = source[current]
-        current += 1
-        return c
-    }
-    
-    private func peek() -> Character {
-        guard !isAtEnd else { return "\0" }
-        return source[current]
-    }
-    
-    private func peekNext() -> Character {
-        let next = current + 1
-        guard next < source.count else { return "\0" }
-        return source[next]
-    }
-    
-    private func match(_ expected: Character) -> Bool {
-        guard !isAtEnd else { return false }
-        guard source[current] == expected else { return false }
-        current += 1
-        return true
-    }
-    
-    private func addToken(_ tokenType: TokenType, literal: Any? = nil) {
+    private func addIdentifierToken() {
+        while peek().isAlphaNumeric {
+            advance()
+        }
         let text = String(source[start ..< current])
-        let token = Token(tokenType: tokenType,
-                          lexeme: text,
-                          literal: literal,
-                          line: line)
-        tokens.append(token)
+        let tokenType = Scanner.keywords[text] ?? .identifier
+        addToken(tokenType)
+    }
+    
+    private func addNumberToken() {
+        while peek().isDigit {
+            advance()
+        }
+        if peek() == "." && peekNext().isDigit {
+            advance()
+            while peek().isDigit {
+                advance()
+            }
+        }
+        let value = Double(source[start ..< current])
+        addToken(.number, literal: value)
     }
     
     private func addStringToken() {
@@ -147,33 +136,44 @@ class Scanner {
         addToken(.string, literal: value)
     }
     
-    private func addNumberToken() {
-        while peek().isDigit {
-            advance()
-        }
-        if peek() == "." && peekNext().isDigit {
-            advance()
-            while peek().isDigit {
-                advance()
-            }
-        }
-        let value = Double(source[start ..< current])
-        addToken(.number, literal: value)
-    }
-    
-    private func addIdentifierToken() {
-        while peek().isAlphaNumeric {
-            advance()
-        }
+    private func addToken(_ tokenType: TokenType, literal: Any? = nil) {
         let text = String(source[start ..< current])
-        let tokenType = Scanner.keywords[text] ?? .identifier
-        addToken(tokenType)
+        let token = Token(tokenType: tokenType,
+                          lexeme: text,
+                          literal: literal,
+                          line: line)
+        tokens.append(token)
     }
     
     private func skipComment() {
         while peek() != "\n" && !isAtEnd {
             advance()
         }
+    }
+    
+    private func match(_ expected: Character) -> Bool {
+        guard !isAtEnd else { return false }
+        guard source[current] == expected else { return false }
+        current += 1
+        return true
+    }
+    
+    private func peek() -> Character {
+        guard !isAtEnd else { return "\0" }
+        return source[current]
+    }
+    
+    private func peekNext() -> Character {
+        let next = current + 1
+        guard next < source.count else { return "\0" }
+        return source[next]
+    }
+    
+    @discardableResult
+    private func advance() -> Character {
+        let c = source[current]
+        current += 1
+        return c
     }
 }
 

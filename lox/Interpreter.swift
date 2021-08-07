@@ -112,6 +112,21 @@ class Interpreter {
 
 extension Interpreter: ExprVisitor {
     
+    func visitAssignExpr(_ expr: Expr.Assign) throws -> Any? {
+        var value: Any? = nil
+        if let exprValue = expr.value {
+            value = try evaluate(exprValue)
+        }
+        
+        if let distance = locals[expr] {
+            try environment.assign(at: distance, token: expr.name, value: value)
+        } else {
+            try globals.assign(token: expr.name, value: value)
+        }
+        
+        return value
+    }
+    
     func visitBinaryExpr(_ expr: Expr.Binary) throws -> Any? {
         let left = try evaluate(expr.left)
         let right = try evaluate(expr.right)
@@ -266,21 +281,6 @@ extension Interpreter: ExprVisitor {
         return try environment.get(at: distance, token: name)
     }
     
-    func visitAssignExpr(_ expr: Expr.Assign) throws -> Any? {
-        var value: Any? = nil
-        if let exprValue = expr.value {
-            value = try evaluate(exprValue)
-        }
-        
-        if let distance = locals[expr] {
-            try environment.assign(at: distance, token: expr.name, value: value)
-        } else {
-            try globals.assign(token: expr.name, value: value)
-        }
-        
-        return value
-    }
-    
     private func numericOperand(for oper: Token, operand: Any?) throws -> Double {
         guard let operand = operand as? Double else {
             throw RuntimeError.typeMismatch(oper, "Operand must be a number.")
@@ -366,7 +366,7 @@ extension Interpreter: StmtVisitor {
         try environment.assign(token: stmt.name, value: klass)
     }
     
-    func superclass(_ stmt: Stmt.Class) throws -> LoxClass? {
+    private func superclass(_ stmt: Stmt.Class) throws -> LoxClass? {
         guard let statementSuperclass = stmt.superclass else {
             return nil
         }

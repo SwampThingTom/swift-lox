@@ -24,10 +24,10 @@ class Lox: ErrorReporting {
     private static let quitCommand = "quit"
     
     private let io: LoxIO
-    var hadError = false
-    var hadRuntimeError = false
-    
     private let interpreter: Interpreter
+    
+    private(set) var hadError = false
+    private(set) var hadRuntimeError = false
     
     init(io: LoxIO) {
         self.io = io
@@ -75,7 +75,7 @@ class Lox: ErrorReporting {
         let statements = parser.parse()
         guard !hadError else { return }
         
-        let resolver = Resolver(lox: self, interpreter: interpreter)
+        let resolver = Resolver(errorReporter: self, interpreter: interpreter)
         resolver.resolve(statements)
         guard !hadError else { return }
         

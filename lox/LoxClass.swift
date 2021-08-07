@@ -11,7 +11,7 @@ class LoxClass: LoxCallable, CustomStringConvertible {
     
     let name: String
     let superclass: LoxClass?
-    let methods: Dictionary<String, LoxFunction>
+    private let methods: Dictionary<String, LoxFunction>
 
     var arity: Int {
         initializer?.arity ?? 0

@@ -14,14 +14,14 @@ struct Token: CustomStringConvertible {
     let literal: Any?
     let line: Int
     
+    var description: String {
+        "\(tokenType) \(lexeme) \(literal ?? "")"
+    }
+    
     init(tokenType: TokenType, lexeme: String = "", literal: Any? = nil, line: Int) {
         self.tokenType = tokenType
         self.lexeme = lexeme
         self.literal = literal
         self.line = line
-    }
-    
-    var description: String {
-        "\(tokenType) \(lexeme) \(literal ?? "")"
     }
 }

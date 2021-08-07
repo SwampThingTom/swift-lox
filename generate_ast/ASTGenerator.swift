@@ -74,7 +74,6 @@ class ASTGenerator {
                        fieldList: fields)
         }
         
-        
         writer.printLine("}")
         
         writer.printLine()
