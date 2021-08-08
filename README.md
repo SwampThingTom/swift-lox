@@ -14,8 +14,8 @@ swift build
 This builds three targets.
 
 * `Lox` is a library containing the parser and interpreter.
-* `generate_ast` is an executable that generates the AST classes.
-* `lox-macos` is a MacOS command line executable that wraps the Lox library.
+* `generate_ast` is a command line executable that generates the AST classes.
+* `lox_cli` is a command line executable that wraps the Lox library.
 
 ### Modifying the AST
 
@@ -30,10 +30,10 @@ bin/generate-ast
 ```
 
 After running `generate-ast`, you'll need to rebuild the `Lox` library target
-and the `lox-macos` executable.
+and the `lox_cli` executable.
 
 ```
-swift build --product lox-macos
+swift build --product lox_cli
 ```
 
 ## Running
