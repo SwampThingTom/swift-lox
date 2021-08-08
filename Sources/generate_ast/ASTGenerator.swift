@@ -108,7 +108,7 @@ class ASTGenerator {
                             baseName: String,
                             className: String,
                             fieldList: String) {
-        let fields = fields(from: fieldList)
+        let fields = makeFields(from: fieldList)
         
         writer.printLine()
         writer.printLine("    class \(className): \(baseName) {")
@@ -135,7 +135,7 @@ class ASTGenerator {
         writer.printLine("    }")
     }
     
-    private func fields(from fieldList: String) -> [Field] {
+    private func makeFields(from fieldList: String) -> [Field] {
         fieldList.components(separatedBy: ", ").map() {
             let fieldAndType = $0.split(separator: " ")
             let type = fieldAndType[0].trimmingCharacters(in: .whitespaces)

@@ -64,20 +64,20 @@ class Parser {
     
     private func classDeclaration() throws -> Stmt {
         let name = try consume(tokenType: .identifier, errorIfMissing: "Expect class name.")
-        let superclass = try superclass()
+        let superclass = try parseSuperclass()
         try consume(tokenType: .leftBrace, errorIfMissing: "Expect '{' before class body.")
-        let methods = try methods()
+        let methods = try parseMethods()
         try consume(tokenType: .rightBrace, errorIfMissing: "Expect '}' after class body.")
         return Stmt.Class(name: name, superclass: superclass, methods: methods)
     }
     
-    private func superclass() throws -> Expr.Variable? {
+    private func parseSuperclass() throws -> Expr.Variable? {
         guard match(tokenType: .less) else { return nil }
         try consume(tokenType: .identifier, errorIfMissing: "Expect superclass name.")
         return Expr.Variable(name: previous)
     }
     
-    private func methods() throws -> [Stmt.Function] {
+    private func parseMethods() throws -> [Stmt.Function] {
         var methods = [Stmt.Function]()
         while !check(tokenType: .rightBrace) && !isAtEnd {
             methods.append(try function(kind: "method"))

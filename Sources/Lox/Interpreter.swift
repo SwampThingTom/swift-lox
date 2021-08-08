@@ -338,7 +338,7 @@ extension Interpreter: StmtVisitor {
     }
     
     func visitClassStmt(_ stmt: Stmt.Class) throws -> Void {
-        let superclass = try superclass(stmt)
+        let superclass = try evaluateSuperclass(stmt)
         
         environment.define(token: stmt.name, value: nil)
         
@@ -366,7 +366,7 @@ extension Interpreter: StmtVisitor {
         try environment.assign(token: stmt.name, value: klass)
     }
     
-    private func superclass(_ stmt: Stmt.Class) throws -> LoxClass? {
+    private func evaluateSuperclass(_ stmt: Stmt.Class) throws -> LoxClass? {
         guard let statementSuperclass = stmt.superclass else {
             return nil
         }
