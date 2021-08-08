@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+script_dir=$(dirname "$0")
+repo_dir="$script_dir/.."
+exe_dir="$script_dir/../.build/debug"
+
+( cd ${repo_dir}; swift build --product generate_ast )
+${exe_dir}/generate_ast Sources/lox/ast

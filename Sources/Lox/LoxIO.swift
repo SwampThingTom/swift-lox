@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol LoxIO {
+public protocol LoxIO {
     func printLine(_ message: String)
     func printErrorLine(_ message: String)
     func readLine() -> String?

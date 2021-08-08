@@ -7,9 +7,9 @@
 
 import Foundation
 
-let EXIT_ERROR_USAGE: Int32 = 64
-let EXIT_ERROR_PARSE: Int32 = 65
-let EXIT_ERROR_RUNTIME: Int32 = 70
+public let EXIT_ERROR_USAGE: Int32 = 64
+public let EXIT_ERROR_PARSE: Int32 = 65
+public let EXIT_ERROR_RUNTIME: Int32 = 70
 
 protocol ErrorReporting {
     var hadError: Bool { get }
@@ -19,7 +19,7 @@ protocol ErrorReporting {
     func error(runtimeError: RuntimeError)
 }
 
-class Lox: ErrorReporting {
+public class Lox: ErrorReporting {
     
     private static let quitCommand = "quit"
     
@@ -29,13 +29,13 @@ class Lox: ErrorReporting {
     private(set) var hadError = false
     private(set) var hadRuntimeError = false
     
-    init(io: LoxIO) {
+    public init(io: LoxIO) {
         self.io = io
         self.interpreter = Interpreter(io: io)
         interpreter.errorReporter = self
     }
     
-    func runScript(_ script: String) {
+    public func runScript(_ script: String) {
         do {
             let contents = try String(contentsOfFile: script)
             run(contents)
@@ -51,7 +51,7 @@ class Lox: ErrorReporting {
         }
     }
     
-    func runPrompt() {
+    public func runPrompt() {
         io.printLine("Running Lox in interactive mode.")
         io.printLine("Type \"\(Lox.quitCommand)\" to exit.")
         while true {
