@@ -5,14 +5,36 @@ The original Java source can be found at https://github.com/munificent/craftingi
 
 ## Building
 
-Building currently requires Xcode. The Xcode project has two targets, lox and generate_ast.
+To build, run:
 
-To build, you first need to build and run the generate_ast target.
-This will generate Swift classes for the language's abstract syntax tree nodes.
-This only needs to be done once (unless you change the AST definitions).
+```
+swift build
+```
 
-Once they are generated, you can build the lox target.
-This is a MacOS command line executable that can run a given Lox script or start an interactive REPL.
+This builds three targets.
+
+* `Lox` is a library containing the parser and interpreter.
+* `generate_ast` is an executable that generates the AST classes.
+* `lox-macos` is a MacOS command line executable that wraps the Lox library.
+
+### Modifying the AST
+
+The `generate_ast` tool is only needed if you change the AST definitions for Lox.
+The generated classes are already checked into this repository.
+
+If you do need to run it, you can use the following script.
+It builds the `generate_ast` executable and runs it.
+
+```
+bin/generate-ast
+```
+
+After running `generate-ast`, you'll need to rebuild the `Lox` library target
+and the `lox-macos` executable.
+
+```
+swift build --product lox-macos
+```
 
 ## Running
 
