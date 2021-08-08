@@ -80,6 +80,23 @@ you can run the tests using another script.
 bin/run-tests
 ```
 
+## Running on Raspberry Pi
+
+I thought it would be fun to add Lox to the list of languages I
+can use on my Raspberry Pi.
+If you want to do the same, all you need to do is install the Swift SDK on your Raspberry Pi following these instructions:
+
+```
+curl -s https://packagecloud.io/install/repositories/swift-arm/release/script.deb.sh | sudo bash
+sudo apt install swiftlang
+```
+
+After that, run `swift build` as usual.
+
+Unfortunately, I didn't have as much luck installing the Dart SDK as they currently don't make 
+their ARM64 build available as a Debian package (https://github.com/dart-lang/sdk/issues/26953).
+So I was unable to get the tests to run on the Raspberry Pi.
+
 ## Notes
 
 My original plan when I picked up "Crafting Interpreters" was to make minor changes to the
